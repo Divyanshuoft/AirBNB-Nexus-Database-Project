@@ -72,4 +72,37 @@ public class ListingDao {
         preparableStatement.close();
     }
 
+    public static ArrayList<Listing> readListingforHost(int uid) throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.listingreadforhost;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        preparableStatement.setInt(1, uid);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        ArrayList<Listing> listings = new ArrayList<Listing>();
+        while (resultSet.next()) {
+            Listing listing = new Listing(resultSet.getInt(1), resultSet.getInt(2), resultSet.getString(3),
+                    resultSet.getDouble(4), resultSet.getDouble(5), resultSet.getDouble(6), resultSet.getString(7),
+                    resultSet.getString(8), resultSet.getString(9), resultSet.getString(10));
+            listings.add(listing);
+        }
+        System.out.println("Listings read successfully");
+        preparableStatement.close();
+        return listings;
+    }
+
+    public static double getPricing(int lid) throws SQLException {
+        // give the pricing for the lid
+        Connection conn = DB.connect();
+        String query = Query.listingreadprice;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        preparableStatement.setInt(1, lid);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        double price = 0;
+        while (resultSet.next()) {
+            price = resultSet.getDouble(1);
+        }
+        preparableStatement.close();
+        return price;
+    }
+
 }
