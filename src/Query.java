@@ -1,3 +1,11 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.print.attribute.standard.MediaSize.Other;
+
 public class Query {
 
     static String usersinsert = "INSERT INTO users (uid, name, address, dob, occupation, sin, payment_info) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -41,4 +49,35 @@ public class Query {
 
     static String listratinginsert = "INSERT INTO listing_rating (lrid, rater, listing, rating, body, date) VALUES (?, ?, ?, ?, ?, ?)";
     static String listratingread = "SELECT * FROM listing_rating WHERE listing = ?";
+
+    // The system at a minimum should be able to search for specific listings in the
+    // vicinity of a specific location. Namely if a user specifies a latitude and
+    // longitude we should return all listings with a specific distance (the user
+    // should have a choice of the distance along with a default provided). The
+    // listings returned should be ranked by the distance to the specific search
+    // location. You have to decide what distance you will use.
+    static String listingreadnearby = "SELECT * FROM listing WHERE (latitude - ?) * (latitude - ?) + (longitude - ?) * (longitude - ?) <= ? * ? ORDER BY (latitude - ?) * (latitude - ?) + (longitude - ?) * (longitude - ?) ASC";
+    static String listingreadpricewise = "SELECT * FROM listing ORDER BY price ASC";
+    static String listingPriceHighttoLow = "SELECT * FROM listing ORDER BY price DESC";
+    // Other search options should be possible for example a search by postal code
+    // which should return all listings in the same and adjacent postal codes.
+    // Please give the query for this adjacent code search
+    // SELECT *
+    // FROM YourTableName
+    // WHERE postal LIKE CONCAT(SUBSTRING(:input_postal, 1,
+    // CHAR_LENGTH(:input_postal) - 1), '_', SUBSTRING(:input_postal, -1))
+    // ORDER BY ABS(postal - :input_postal)
+    // LIMIT 5;
+
+    static String listingreadaddress = "SELECT * FROM listing WHERE address = ?";
+    static String listingreadpostal = "SELECT * FROM listing WHERE postal LIKE CONCAT(SUBSTRING(?, 1, CHAR_LENGTH(?) - 1), '_', SUBSTRING(?, -1)) ORDER BY ABS(postal - ?) LIMIT 5";
+
+    // We would like to run a report and provide the total number of listings per
+    // country, per country and city as well as per country, city and postal code
+
+    static String listingreadcountry = "SELECT * FROM listing WHERE country = ?";
+    static String listingreadcountrycity = "SELECT * FROM listing WHERE country = ? AND city = ?";
+    static String listingreadcountrycitypostal = "SELECT * FROM listing WHERE country = ? AND city = ? AND postal = ?";
+    static String listingreadcountryhost = "SELECT hid, COUNT(*) FROM listing WHERE country = ? GROUP BY hid ORDER BY COUNT(*) DESC";
+    static String listingreadcityhost = "SELECT hid, COUNT(*) FROM listing WHERE city = ? GROUP BY hid ORDER BY COUNT(*) DESC";
 }

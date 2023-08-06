@@ -54,7 +54,7 @@ public class App {
                 }
                 while (logged_in == 0) {
                     System.out.println(
-                            "2. Read User 5. Your Listings 6. Book a new Listing 7. View your Bookings 8. View Amentities for hosts 10. View reviews 9. Logout");
+                            "2. Read User 3. Search Listing 5. Your Listings 6. Book a new Listing 7. View your Bookings 8. View Amentities for hosts 10. View reviews 9. Logout");
                     System.out.print("\nEnter your choice: ");
                     scanner = new Scanner(System.in);
                     choice = scanner.nextInt();
@@ -70,6 +70,120 @@ public class App {
                             ArrayList<Employee> employees = EmployeeDao.readEmployees();
                             for (Employee e : employees) {
                                 System.out.println(e);
+                            }
+                            break;
+                        case 3:
+                            System.out.println("Search Listing");
+                            int search_id = 0;
+                            while (search_id == 0) {
+                                System.out.println("Enter your choice:");
+                                System.out.println(
+                                        "5. Ranking Host by Country 6. Ranking Host by City");
+                                int search = scanner.nextInt();
+                                scanner.nextLine();
+                                switch (search) {
+                                    case 5:
+                                        System.out.println("Enter country");
+                                        String country = scanner.nextLine();
+                                        ListingDao.ListingHostCountryRanking(country);
+                                        break;
+                                    case 6:
+                                        System.out.println("Enter city");
+                                        String city = scanner.nextLine();
+                                        ListingDao.ListingHostCityRanking(city);
+                                        break;
+
+                                    // case 6:
+                                    // System.out.println("Enter country");
+                                    // String country = scanner.nextLine();
+                                    // ArrayList<Listing> listingsc = ListingDao.countrysearch(country);
+                                    // System.out.println("Here are the listings in " + country);
+                                    // int count = 0;
+                                    // for (Listing l : listingsc) {
+                                    // System.out.println(l);
+                                    // count++;
+                                    // }
+                                    // System.out.println("Total listings: " + count);
+                                    // break;
+
+                                    // case 7:
+                                    // System.out.println("Enter city and country");
+                                    // String city = scanner.nextLine();
+                                    // String country1 = scanner.nextLine();
+                                    // count = 0;
+                                    // System.out.println("Here are the listings in " + city + ", " + country1);
+                                    // ArrayList<Listing> listingscc = ListingDao.countrycitysearch(country1, city);
+                                    // for (Listing l : listingscc) {
+                                    // System.out.println(l);
+                                    // count++;
+
+                                    // }
+                                    // System.out.println("Total listings: " + count);
+
+                                    // break;
+
+                                    // case 8:
+                                    // System.out.println("Enter city, postal code and country");
+                                    // String city1 = scanner.nextLine();
+                                    // String postal_code = scanner.nextLine();
+                                    // String country2 = scanner.nextLine();
+                                    // count = 0;
+                                    // System.out.println("Here are the listings in " + city1 + ", " + postal_code
+                                    // + ", " + country2);
+                                    // ArrayList<Listing> listingscpc = ListingDao.countrycitypostalsearch(
+                                    // country2, city1, postal_code);
+                                    // for (Listing l : listingscpc) {
+                                    // System.out.println(l);
+                                    // count++;
+
+                                    // }
+                                    // System.out.println("Total listings: " + count);
+
+                                    // break;
+                                    // case 1:
+                                    // System.out.println("Enter latitude and longitude");
+                                    // double latitude2 = scanner.nextDouble();
+                                    // double longitude2 = scanner.nextDouble();
+                                    // System.out.println("Enter distance");
+                                    // double distance = scanner.nextDouble();
+                                    // ArrayList<Listing> listingsi = ListingDao.readListings(latitude2, longitude2,
+                                    // distance);
+                                    // for (Listing l : listingsi) {
+                                    // System.out.println(l);
+                                    // }
+                                    // break;
+                                    // case 2:
+                                    // ArrayList<Listing> listingsp =
+                                    // ListingDao.readListingsPriceWiseSortLowtoHigh();
+                                    // System.out.println("Here are the listings sorted by price low to high");
+                                    // for (Listing l : listingsp) {
+                                    // System.out.println(l);
+                                    // }
+                                    // break;
+                                    // case 3:
+                                    // System.out.println("Enter postal code");
+                                    // String postal_code = scanner.nextLine();
+                                    // ArrayList<Listing> listingspc = ListingDao.postalcodesearch(postal_code);
+                                    // for (Listing l : listingspc) {
+                                    // System.out.println(l);
+                                    // }
+                                    // break;
+                                    // case 4:
+                                    // System.out.println("Enter address");
+                                    // String address = scanner.nextLine();
+                                    // ArrayList<Listing> listingsa = ListingDao.addresssearch(address);
+                                    // for (Listing l : listingsa) {
+                                    // System.out.println(l);
+                                    // }
+                                    // break;
+                                    // case 5:
+                                    // ArrayList<Listing> listingsph = ListingDao.pricehigtolow();
+                                    // System.out.println("Here are the listings sorted by price high to low");
+                                    // for (Listing l : listingsph) {
+                                    // System.out.println(l);
+                                    // }
+                                    // break;
+                                }
                             }
                             break;
 
