@@ -18,6 +18,7 @@ public class Query {
     static String bookingupdate = "UPDATE booking SET book_date = ?, start = ?, end = ?, is_cancelled = ? WHERE bid = ?";
     static String bookingdelete = "DELETE FROM booking WHERE bid = ?";
     static String bookingreadforuser = "SELECT * FROM booking WHERE rid = ?";
+    static String bookingreadforlisting = "SELECT * FROM booking WHERE lid = ?";
 
     static String amenitiesinsert = "INSERT INTO amenities (aid, name, price) VALUES (?, ?, ?)";
     static String amenitiesread = "SELECT * FROM amenities";
@@ -29,4 +30,15 @@ public class Query {
     static String listingamentitiesupdate = "UPDATE listing_amenities SET aid = ? WHERE lid = ?";
     static String listingamentitiesdelete = "DELETE FROM listing_amenities WHERE lid = ? AND aid = ?";
     static String listingamentitiesreadforlid = "SELECT * FROM listing_amenities WHERE lid = ?";
+
+    static String userratinginsert = "INSERT INTO user_rating (urid, rater, ratee, rating, body, date) VALUES (?, ?, ?, ?, ?, ?)";
+    static String userratingread = "SELECT * FROM user_rating";
+    static String userratingupdate = "UPDATE user_rating SET rating = ?, body = ?, date = ? WHERE urid = ?";
+    static String userratingdelete = "DELETE FROM user_rating WHERE urid = ?";
+    // give quety such that it reunts the reviews such that it can be in either
+    // rater or ratee
+    static String userratingreadforuser = "SELECT * FROM user_rating WHERE rater = ? OR ratee = ?";
+
+    static String listratinginsert = "INSERT INTO listing_rating (lrid, rater, listing, rating, body, date) VALUES (?, ?, ?, ?, ?, ?)";
+    static String listratingread = "SELECT * FROM listing_rating WHERE listing = ?";
 }

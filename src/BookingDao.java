@@ -85,4 +85,23 @@ public class BookingDao {
             System.out.println();
         }
     }
+
+    public static ArrayList<Booking> readBookingforListing(int lid) throws SQLException {
+        ArrayList<Booking> bookings = new ArrayList<Booking>();
+        Connection conn = DB.connect();
+        String query = Query.bookingreadforlisting;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        preparableStatement.setInt(1, lid);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        while (resultSet.next()) {
+            Booking booking = new Booking(
+                    resultSet.getInt(1), resultSet.getInt(2), resultSet.getInt(3),
+                    resultSet.getString(4), resultSet.getString(5), resultSet.getString(6),
+                    resultSet.getDouble(7), resultSet.getString(8), resultSet.getBoolean(9));
+            bookings.add(booking);
+        }
+        System.out.println("Bookings read successfully");
+        preparableStatement.close();
+        return bookings;
+    }
 }
