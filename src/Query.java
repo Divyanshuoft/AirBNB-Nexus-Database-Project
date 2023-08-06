@@ -23,4 +23,10 @@ public class Query {
     static String amenitiesread = "SELECT * FROM amenities";
     static String amenitiesupdate = "UPDATE amenities SET name = ?, price = ? WHERE aid = ?";
     static String amenitiesdelete = "DELETE FROM amenities WHERE aid = ?";
+
+    static String listingamentitiesinsert = "INSERT INTO listing_amenities (lid, aid) VALUES (?, ?)";
+    static String listingamentitiesread = "SELECT * FROM listing_amenities";
+    static String listingamentitiesupdate = "UPDATE listing_amenities SET aid = ? WHERE lid = ?";
+    static String listingamentitiesdelete = "DELETE FROM listing_amenities WHERE lid = ? AND aid = ?";
+    static String listingamentitiesreadforlid = "SELECT * FROM listing_amenities WHERE lid = ?";
 }

@@ -162,16 +162,111 @@ public class App {
                             while (host_listing == 0) {
                                 System.out.println("Please enter your choice:");
                                 System.out.println(
-                                        "2. Create new Listing 5. Update existing Listing 6. Delete a listing 7. Add amentities 9. Go back to home-page");
+                                        "1. View Listing 2. Create new Listing 5. Update existing Listing 6. Delete a listing 7. Add amentities 9. Go back to home-page");
                                 scanner = new Scanner(System.in);
-                                int x2 = scanner.nextInt();
+                                int x7 = scanner.nextInt();
 
-                                switch (x2) {
+                                switch (x7) {
+                                    case 1:
+                                        System.out.println("Here are your Listings");
+                                        listings2 = ListingDao.readListingforHost(uid);
+                                        for (Listing l : listings2) {
+                                            System.out.println(l);
+                                        }
+                                        System.out.println("Please enter the listing id");
+                                        int lid = scanner.nextInt();
+                                        int listing_entered = 0;
+
+                                        while (listing_entered == 0) {
+                                            System.out.println("Please enter your choice:");
+                                            System.out.println(
+                                                    "1. View Amenitites 2. View Listing Reviews 3. Go back to Listing page");
+                                            int x3 = scanner.nextInt();
+
+                                            switch (x3) {
+                                                case 1:
+                                                    System.out.println("View Amenitites for the listing");
+                                                    ArrayList<ListingAmentities> amenities2 = ListingAmentitiesDao
+                                                            .readAmenitiesforListingforlid(lid);
+                                                    for (ListingAmentities a : amenities2) {
+                                                        System.out.println(a);
+                                                    }
+                                                    int listing_amenity = 0;
+                                                    while (listing_amenity == 0) {
+                                                        System.out.println("Please enter your choice:");
+                                                        System.out.println(
+                                                                "1. Add new amenity 2. Delete amenity 3. Go back to your Listing");
+                                                        int aid2 = scanner.nextInt();
+                                                        scanner.nextLine();
+                                                        switch (aid2) {
+                                                            case 1:
+                                                                System.out.println("Here are all the amenities");
+                                                                amenities = AmenitiesDao.readAmenities();
+                                                                for (Amenities a : amenities) {
+                                                                    System.out.println(a);
+                                                                }
+                                                                System.out.println(
+                                                                        "Add new amenity from above: aid");
+                                                                int aid1 = scanner.nextInt();
+                                                                scanner.nextLine();
+                                                                ListingAmentities amenity = new ListingAmentities(lid,
+                                                                        aid1);
+                                                                System.out.println("View updated Amentities for hosts");
+                                                                ListingAmentitiesDao.createListingAmentities(amenity);
+                                                                amenities2 = ListingAmentitiesDao
+                                                                        .readAmenitiesforListingforlid(lid);
+                                                                for (ListingAmentities a : amenities2) {
+                                                                    System.out.println(a);
+                                                                }
+                                                                break;
+                                                            case 2:
+                                                                System.out.println(
+                                                                        "Here are all the amenities for your listing");
+                                                                amenities2 = ListingAmentitiesDao
+                                                                        .readAmenitiesforListingforlid(lid);
+                                                                for (ListingAmentities a : amenities2) {
+                                                                    System.out.println(a);
+                                                                }
+                                                                System.out.println("Delete amenity: aid");
+                                                                aid1 = scanner.nextInt();
+                                                                ListingAmentitiesDao
+                                                                        .deleteListingAmentities(aid1, lid);
+                                                                System.out.println(
+                                                                        "View updated Amentities for hosts");
+                                                                amenities2 = ListingAmentitiesDao
+                                                                        .readAmenitiesforListingforlid(lid);
+                                                                for (ListingAmentities a : amenities2) {
+                                                                    System.out.println(a);
+                                                                }
+                                                                break;
+                                                            case 3:
+                                                                listing_amenity = 1;
+                                                                System.out.println("Go back to your Listing");
+                                                                break;
+                                                        }
+                                                    }
+                                                    break;
+
+                                                // case 2:
+                                                // System.out.println("View Listing Reviews");
+                                                // ArrayList<Review> reviews = ReviewDao
+                                                // .readReviewsforListing(lid);
+                                                // for (Review r : reviews) {
+                                                // System.out.println(r);
+                                                // }
+                                                // break;
+                                                case 3:
+                                                    listing_entered = 1;
+                                                    break;
+                                            }
+                                        }
+                                        break;
+
                                     case 2:
                                         System.out.println(
                                                 "Create Listing: id, hid, type, price, latitude, longitude, address, postal, city, country");
                                         scanner.nextLine();
-                                        int lid = scanner.nextInt();
+                                        int lidx = scanner.nextInt();
                                         scanner.nextLine();
                                         int hid = scanner.nextInt();
                                         scanner.nextLine();
@@ -186,7 +281,7 @@ public class App {
                                         String postal = scanner.nextLine();
                                         String city = scanner.nextLine();
                                         String country = scanner.nextLine();
-                                        Listing listing = new Listing(lid, hid, type, price, latitude, longitude,
+                                        Listing listing = new Listing(lidx, hid, type, price, latitude, longitude,
                                                 address2, postal,
                                                 city,
                                                 country);
