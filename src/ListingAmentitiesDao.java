@@ -43,6 +43,30 @@ public class ListingAmentitiesDao {
         preparableStatement.close();
     }
 
+    public static void findAvgAmmenityPrice() throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.findAvgAmmenityPrice;
+        Statement statement = conn.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        System.out.println("Listings can generate extra revunue by an average of ");
+        while (resultSet.next()) {
+            System.out.print(resultSet.getString(1) + " dollars");
+        }
+        statement.close();
+    }
+
+    public static void mostCommonAmmenitites() throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.listingamentitiesreadforaid2;
+        Statement statement = conn.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        System.out.println("The most common amenities are:");
+        while (resultSet.next()) {
+            System.out.println(resultSet.getString(1) + " are installed in " + resultSet.getInt(3)
+                    + " listings and increases the revune by " + resultSet.getInt(2) + " dollars");
+        }
+        statement.close();
+    }
     // public static void updateListingAmentities(int id, int aid) throws
     // SQLException {
     // Connection conn = DB.connect();

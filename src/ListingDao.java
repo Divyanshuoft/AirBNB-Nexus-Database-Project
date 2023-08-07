@@ -6,6 +6,108 @@ import java.util.ArrayList;
 import java.sql.Statement;
 
 public class ListingDao {
+    String[] bigCities = {
+            "Tokyo", "Delhi", "Shanghai", "São Paulo", "Mumbai",
+            "Beijing", "Cairo", "Dhaka", "Osaka", "Karachi",
+            "Chongqing", "Istanbul", "Lahore", "Shenzhen", "Bangalore",
+            "Moscow", "Tianjin", "Jakarta", "Kinshasa", "Seoul",
+            "Mexico City", "Lima", "New York City", "Los Angeles", "Cairo",
+            "London", "Bangkok", "Lagos", "Rio de Janeiro", "Paris",
+            "Berlin", "Madrid", "Toronto", "Chicago", "Tokyo",
+            "Singapore", "Sydney", "Hong Kong", "Miami", "Dubai",
+            "Mumbai", "Delhi", "Moscow", "Cairo", "Shanghai",
+            "Istanbul", "Kolkata", "Buenos Aires", "Manila", "Kuala Lumpur",
+            "Cape Town", "Johannesburg", "Riyadh", "Rome", "Athens",
+            "Amsterdam", "Vienna", "Stockholm", "Helsinki", "Dublin",
+            "Oslo", "Zurich", "Copenhagen", "Warsaw", "Prague"
+    };
+
+    String[] mediumCities = {
+            "Barcelona", "Munich", "Vancouver", "Milan", "Hamburg",
+            "Montreal", "San Francisco", "Dallas", "Melbourne", "Amman",
+            "Kiev", "Lisbon", "Brussels", "Marseille", "Budapest",
+            "Vienna", "Warsaw", "Prague", "Oslo", "Helsinki",
+            "Stockholm", "Copenhagen", "Zurich", "Dublin", "Riyadh",
+            "Jeddah", "Kuwait City", "Doha", "Abu Dhabi", "Muscat",
+            "Manama", "Tunis", "Algiers", "Casablanca", "Nairobi",
+            "Nairobi", "Bogota", "Lima", "Santiago", "Brisbane",
+            "Auckland", "Wellington", "Hobart", "Kolkata", "Chennai",
+            "Bangalore", "Hyderabad", "Ahmedabad", "Pune", "Surat"
+    };
+
+    String[] smallCities = {
+            // Indian Cities
+            "Delhi", "Mumbai", "Bangalore", "Chennai", "Kolkata",
+            "Hyderabad", "Pune", "Ahmedabad", "Jaipur", "Surat",
+            "Kanpur", "Lucknow", "Nagpur", "Indore", "Thane",
+            "Bhopal", "Visakhapatnam", "Pimpri-Chinchwad", "Patna", "Vadodara",
+            "Ghaziabad", "Ludhiana", "Agra", "Nashik", "Faridabad",
+            "Meerut", "Rajkot", "Kalyan-Dombivli", "Vasai-Virar", "Varanasi",
+            "Srinagar", "Aurangabad", "Dhanbad", "Amritsar", "Navi Mumbai",
+            "Allahabad", "Howrah", "Ranchi", "Coimbatore", "Jabalpur",
+            "Gwalior", "Vijayawada", "Jodhpur", "Madurai", "Raipur",
+
+            // Canadian Cities
+            "Toronto", "Montreal", "Vancouver", "Calgary", "Edmonton",
+            "Ottawa", "Quebec City", "Winnipeg", "Hamilton", "Kitchener",
+            "London", "Victoria", "Halifax", "Oshawa", "Windsor",
+            "Regina", "Saskatoon", "Kelowna", "St. John's", "Thunder Bay",
+            "Moncton", "Fredericton", "Charlottetown", "Whitehorse", "Yellowknife",
+            "Iqaluit", "Surrey", "Burnaby", "Vaughan", "Richmond",
+            "Mississauga", "Brampton", "Markham", "Saskatoon", "Oakville",
+            "Burlington", "Abbotsford", "Barrie", "Sherbrooke", "Trois-Rivières",
+            "Gatineau", "Halifax", "Laval", "Longueuil", "Saguenay",
+            "Levis", "Terrebonne", "Coquitlam", "Red Deer", "Lethbridge",
+            "Nanaimo", "Kamloops", "Saint John", "Guelph", "Prince George",
+            "Medicine Hat", "Peterborough", "Drummondville", "New Westminster", "Chilliwack",
+            "Saint-Jérôme", "Sault Ste. Marie", "North Bay", "Shawinigan", "Cornwall"
+    };
+
+    public static double givePriceCity(String city) throws SQLException {
+        // how can I print this static String getAvgPriceforcity = "SELECT AVG(price)
+        // FROM listing WHERE city = ?";
+        Connection conn = DB.connect();
+        String query = Query.getAvgPriceforcity;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        preparableStatement.setString(1, city);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        double avgPrice = 0;
+        while (resultSet.next()) {
+            avgPrice = resultSet.getDouble("AVG(price)");
+        }
+        return avgPrice;
+    }
+
+    public static double giveAvgListingPrice() throws SQLException {
+        // how can I print this static String getAvgPriceforcity = "SELECT AVG(price)
+        // FROM listing WHERE city = ?";
+        Connection conn = DB.connect();
+        String query = Query.getAvgPriceforcity2;
+        Statement statement = conn.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        double avgPrice = 0;
+        while (resultSet.next()) {
+            avgPrice = resultSet.getDouble("AVG(price)");
+        }
+        return avgPrice;
+    }
+
+    public static double givePriceCityTypePostal(String city, String type, String postal) throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.getAvgPriceforCityTypePostal;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        preparableStatement.setString(1, city);
+        preparableStatement.setString(2, type);
+        preparableStatement.setString(3, postal);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        double avgPrice = 0;
+        while (resultSet.next()) {
+            avgPrice = resultSet.getDouble("AVG(price)");
+        }
+        return avgPrice;
+    }
+
+    // make an array ofhte wor;d's biggest cities, add about 50 to the array
     public static void createListing(Listing listing) throws SQLException {
         Connection conn = DB.connect();
         String query = Query.listinginsert;
@@ -25,6 +127,29 @@ public class ListingDao {
         preparableStatement.close();
     }
 
+    // give function for this static String bookingcalenderjoin = "SELECT * FROM
+    // booking INNER JOIN calendar ON booking.start = calendar.start AND booking.end
+    // = calendar.end AND booking.lid = calendar.lid";
+    // public static void JoinBookingCalender() throws SQLException {
+    // Connection conn = DB.connect();
+    // String query = Query.joinBookingCalenderListing;
+    // Statement statement = conn.createStatement();
+    // ResultSet resultSet = statement.executeQuery(query);
+    // // print every elemenr of resultset
+    // for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+    // System.out.print(resultSet.getMetaData().getColumnName(i) + " ");
+    // }
+    // System.out.println();
+    // while (resultSet.next()) {
+    // for (int i = 1; i <= resultSet.getMetaData().getColumnCount(); i++) {
+    // System.out.print(resultSet.getString(i) + " ");
+    // }
+    // System.out.println();
+    // }
+    // System.out.println("Booking and Calender joined successfully");
+    // statement.close();
+    // }
+
     public static ArrayList<Listing> readListing() throws SQLException {
         ArrayList<Listing> listings = new ArrayList<Listing>();
         Connection conn = DB.connect();
@@ -42,24 +167,34 @@ public class ListingDao {
         return listings;
     }
 
-    public static void updateListing(int lid, int hid, String type, double price, double latitude, double longitude,
-            String address, String postal, String city, String country) throws SQLException {
+    public static void updateListing(int lid, int hid, double price) throws SQLException {
         Connection conn = DB.connect();
         String query = Query.listingupdate;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
         preparableStatement.setInt(1, hid);
-        preparableStatement.setString(2, type);
-        preparableStatement.setDouble(3, price);
-        preparableStatement.setDouble(4, latitude);
-        preparableStatement.setDouble(5, longitude);
-        preparableStatement.setString(6, address);
-        preparableStatement.setString(7, postal);
-        preparableStatement.setString(8, city);
-        preparableStatement.setString(9, country);
-        preparableStatement.setInt(10, lid);
+        preparableStatement.setDouble(2, price);
+        preparableStatement.setInt(3, lid);
         System.out.println("Listing updated successfully");
         preparableStatement.executeUpdate();
         preparableStatement.close();
+    }
+
+    public static ArrayList<Listing> readListingPostal(String postal) throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.listingreadpostalcode;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        preparableStatement.setString(1, postal.substring(0, 3) + "%");
+        ResultSet resultSet = preparableStatement.executeQuery();
+        ArrayList<Listing> listings = new ArrayList<Listing>();
+        while (resultSet.next()) {
+            Listing listing = new Listing(resultSet.getInt(1), resultSet.getInt(2), resultSet.getString(3),
+                    resultSet.getDouble(4), resultSet.getDouble(5), resultSet.getDouble(6), resultSet.getString(7),
+                    resultSet.getString(8), resultSet.getString(9), resultSet.getString(10));
+            listings.add(listing);
+        }
+        System.out.println("Listings read successfully");
+        preparableStatement.close();
+        return listings;
     }
 
     public static void deleteListing(int id) throws SQLException {
@@ -317,5 +452,53 @@ public class ListingDao {
         }
         System.out.println("Listings read successfully");
         preparableStatement.close();
+    }
+
+    // static String listingreadcountryhost10 = "SELECT host_sin, name,
+    // table1.country FROM (SELECT host_sin, name, COUNT(lid) AS NumberOfListings,
+    // country FROM listing, users WHERE host_sin = sin GROUP BY host_sin, country
+    // ORDER BY NumberOfListings DESC) table1, (SELECT country, COUNT(*) AS
+    // CountryListings FROM listing GROUP BY country) table2 WHERE
+    // table1.NumberOfListings >= (0.1 * table2.CountryListings) AND table1.country
+    // = table2.country AND table1.country = ? AND table1.city = ?";
+    // give the code as a funciton for the above query
+    public static void TenPercentListing(String city, String country) throws SQLException {
+        int total = TotalListings(city, country);
+        Connection conn = DB.connect();
+        String query = Query.listingreadcityhost;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        // static String listingreadcitycount = "SELECT host_id, COUNT(*) FROM listing
+        // WHERE city = ? GROUP BY host_id ORDER BY COUNT(*) DESC";
+        System.out.println("Total number of listings in " + city + ", " + country + ": " + total);
+        System.out.println("Hosts with more than 10% of listings in " + city + ", " + country + ":");
+        preparableStatement.setString(1, city);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        while (resultSet.next()) {
+            if (resultSet.getInt(2) >= (0.1 * total)) {
+                System.out.println("Host ID: " + resultSet.getInt(1) + " Number of listings: " + resultSet.getInt(2));
+            }
+        }
+        System.out.println("Listings read successfully");
+        preparableStatement.close();
+
+    }
+
+    // give funsiton for this static String listingreadtotal = "SELECT COUNT(*) FROM
+    // listing WHERE city = ? AND country = ?";
+    public static int TotalListings(String city, String country) throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.listingreadtotal;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        // static String listingreadtotal = "SELECT COUNT(*) FROM listing WHERE city =
+        // ? AND country = ?";
+        preparableStatement.setString(1, city);
+        preparableStatement.setString(2, country);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        int total = 0;
+        while (resultSet.next()) {
+            total = resultSet.getInt(1);
+        }
+        preparableStatement.close();
+        return total;
     }
 }

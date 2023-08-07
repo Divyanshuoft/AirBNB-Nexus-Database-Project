@@ -1,13 +1,25 @@
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
+
+import javax.swing.text.StyledEditorKit;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class App {
     public static int exit_program = 0;
     public static int uid = 0;
+    static LocalDate currentDate = LocalDate.now();
 
+    // Define the date format
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    // Format the current date as per the defined format
+    static String present_day = currentDate.format(formatter);
+
+    // Print the present date
     public static void main(String[] args) throws Exception {
+        ListRatingDao.CombinedBodyForListing(53);
         while (exit_program == 0) {
             int logged_in = 0;
             System.out.println("Welcome to MyBNB!");
@@ -25,11 +37,10 @@ public class App {
                 break;
             } else if (choice == 2) {
                 System.out.println("Please register: enter");
-                System.out.println("uid, name, address, dob, occupation, sin, payment_info");
-                scanner.nextLine();
-                int id = scanner.nextInt();
+                System.out.println("name, address, dob, occupation, sin, payment_info");
                 scanner.nextLine();
                 String name = scanner.nextLine();
+                int id = name.hashCode();
                 String address = scanner.nextLine();
                 String dob = scanner.nextLine();
                 String occupation = scanner.nextLine();
@@ -78,20 +89,104 @@ public class App {
                             while (search_id == 0) {
                                 System.out.println("Enter your choice:");
                                 System.out.println(
-                                        "5. Ranking Host by Country 6. Ranking Host by City");
+                                        "1. Total booking for a city with a zipcode");
                                 int search = scanner.nextInt();
                                 scanner.nextLine();
                                 switch (search) {
-                                    case 5:
-                                        System.out.println("Enter country");
-                                        String country = scanner.nextLine();
-                                        ListingDao.ListingHostCountryRanking(country);
-                                        break;
-                                    case 6:
+                                    case 1:
                                         System.out.println("Enter city");
                                         String city = scanner.nextLine();
-                                        ListingDao.ListingHostCityRanking(city);
+                                        System.out.println("Enter Zipcode");
+                                        String zipcode = scanner.nextLine();
+                                        BookingDao.totalBookingForCityZip(zipcode, city);
                                         break;
+
+                                    // case 1:
+                                    // System.out.println("Enter city");
+                                    // String city = scanner.nextLine();
+                                    // System.out.println("Enter start date");
+                                    // String start_date = scanner.nextLine();
+                                    // System.out.println("Enter end date");
+                                    // String end_date = scanner.nextLine();
+                                    // BookingDao.totalBookingForCity(start_date, end_date, city);
+                                    // break;
+                                    // case 7:
+                                    // System.out.println("Enter year");
+                                    // int year = scanner.nextInt();
+                                    // scanner.nextLine();
+                                    // BookingDao.asdasd12(year);
+                                    // break;
+                                    // case 5:
+                                    // System.out.println("Enter start date");
+                                    // String start_date = scanner.nextLine();
+                                    // System.out.println("Enter end date");
+                                    // String end_date = scanner.nextLine();
+                                    // BookingDao.readBooking2(start_date, end_date);
+                                    // break;
+                                    // case 1:
+                                    // System.out.println("Top 10% of hosts");
+                                    // System.out.println("Enter city");
+                                    // String city = scanner.nextLine();
+                                    // System.out.println("Enter country");
+                                    // String country = scanner.nextLine();
+                                    // ListingDao.TenPercentListing(city, country);
+                                    // break;
+                                    // case 6:
+                                    // System.out.println("Enter start date");
+                                    // String start_date = scanner.nextLine();
+                                    // System.out.println("Enter end date");
+                                    // String end_date = scanner.nextLine();
+                                    // System.out.println("Enter city");
+                                    // String city = scanner.nextLine();
+                                    // BookingDao.asdasd(start_date, end_date, city);
+                                    // break;
+                                    // case 2:
+                                    // BookingDao.mostcancellation();
+                                    // break;
+
+                                    // case 3:
+                                    // System.out.println("Enter postal code");
+                                    // String postal_code = scanner.nextLine();
+                                    // ArrayList<Listing> xasd = ListingDao.readListingPostal(postal_code);
+                                    // for (Listing l : xasd) {
+                                    // System.out.println(l);
+                                    // }
+                                    // break;
+
+                                    // case 4:
+                                    // System.out.println("Enter start date");
+                                    // String start_date = scanner.nextLine();
+                                    // System.out.println("Enter end date");
+                                    // String end_date = scanner.nextLine();
+                                    // ArrayList<Calender> xasas = CalenderDao.readCalender();
+                                    // for (Calender l : xasas) {
+                                    // String s = l.getStart();
+                                    // String e = l.getEnd();
+                                    // LocalDate startDate1 = LocalDate.parse(start_date);
+                                    // LocalDate endDate1 = LocalDate.parse(end_date);
+                                    // LocalDate startDate2 = LocalDate.parse(s);
+                                    // LocalDate endDate2 = LocalDate.parse(e);
+
+                                    // // Check if (start1, end1) lies within (start2, end2)
+                                    // boolean isWithin = startDate2.isAfter(startDate1)
+                                    // && endDate2.isBefore(endDate1);
+
+                                    // // Print the result
+                                    // if (isWithin) {
+                                    // System.out.println(l);
+                                    // }
+                                    // }
+                                    // break;
+                                    // case 5:
+                                    // System.out.println("Enter country");
+                                    // String country = scanner.nextLine();
+                                    // ListingDao.ListingHostCountryRanking(country);
+                                    // break;
+                                    // case 6:
+                                    // System.out.println("Enter city");
+                                    // String city = scanner.nextLine();
+                                    // ListingDao.ListingHostCityRanking(city);
+                                    // break;
 
                                     // case 6:
                                     // System.out.println("Enter country");
@@ -285,7 +380,7 @@ public class App {
                             while (host_listing == 0) {
                                 System.out.println("Please enter your choice:");
                                 System.out.println(
-                                        "1. View Listing 2. Create new Listing 5. Update existing Listing 6. Delete a listing 7. Add amentities 9. Go back to home-page");
+                                        "1. View Listing 2. Create new Listing 4. Make a Listing unavailable 5. Update existing Listing 6. Delete a listing 7. Add amentities 9. Go back to home-page");
                                 scanner = new Scanner(System.in);
                                 int x7 = scanner.nextInt();
 
@@ -323,7 +418,9 @@ public class App {
                                                         scanner.nextLine();
                                                         switch (aid2) {
                                                             case 1:
-                                                                System.out.println("Here are all the amenities");
+                                                                ListingAmentitiesDao.mostCommonAmmenitites();
+                                                                System.out.println(
+                                                                        "Here are all the amenities you can add");
                                                                 amenities = AmenitiesDao.readAmenities();
                                                                 for (Amenities a : amenities) {
                                                                     System.out.println(a);
@@ -334,7 +431,8 @@ public class App {
                                                                 scanner.nextLine();
                                                                 ListingAmentities amenity = new ListingAmentities(lid,
                                                                         aid1);
-                                                                System.out.println("View updated Amentities for hosts");
+                                                                System.out.println(
+                                                                        "View updated Amentities for your Listing");
                                                                 ListingAmentitiesDao.createListingAmentities(amenity);
                                                                 amenities2 = ListingAmentitiesDao
                                                                         .readAmenitiesforListingforlid(lid);
@@ -400,7 +498,7 @@ public class App {
                                                     scanner.nextLine();
                                                     System.out.println("Please give the review for the renter");
                                                     String body = scanner.nextLine();
-                                                    String date = "2020-12-12";
+                                                    String date = present_day;
                                                     System.out.println(urid);
                                                     System.out.println(uid);
                                                     System.out.println(rid);
@@ -422,23 +520,42 @@ public class App {
 
                                     case 2:
                                         System.out.println(
-                                                "Create Listing: id, hid, type, price, latitude, longitude, address, postal, city, country");
-                                        scanner.nextLine();
-                                        int lidx = scanner.nextInt();
-                                        scanner.nextLine();
-                                        int hid = scanner.nextInt();
-                                        scanner.nextLine();
+                                                "Please enter the details to create a new listing");
+                                        int hid = uid;
+                                        System.out.println(
+                                                "Please enter the type of listing [ apartments, houses, rooms ]");
                                         String type = scanner.nextLine();
-                                        double price = scanner.nextDouble();
                                         scanner.nextLine();
+                                        System.out.println("Please enter the latitude [ -90, 90 ]]");
                                         double latitude = scanner.nextDouble();
                                         scanner.nextLine();
+                                        System.out.println("Please enter the longitude [ -180, 180 ]");
                                         double longitude = scanner.nextDouble();
                                         scanner.nextLine();
+                                        int lidx = (int) (latitude * 100000 + longitude * 100000
+                                                + Math.random() * 1000);
+                                        System.out.println("Please enter the address [ number, street ]");
                                         String address2 = scanner.nextLine();
+                                        System.out.println("Please enter the postal [ A1A1A1 ]");
                                         String postal = scanner.nextLine();
+                                        System.out.println("Please enter the city [ city ]");
                                         String city = scanner.nextLine();
+                                        System.out.println("Please enter the country [ country ]");
                                         String country = scanner.nextLine();
+                                        System.out.println("Based on our databse, we recommend the following price");
+                                        if (ListingDao.givePriceCityTypePostal(city, type, postal) != 0) {
+                                            System.out.println("The price for the city, type and postal is: "
+                                                    + ListingDao.givePriceCityTypePostal(city, type, postal));
+                                        } else if (ListingDao.givePriceCity(city) != 0) {
+                                            System.out.println("The price for the city is: "
+                                                    + ListingDao.givePriceCity(city));
+                                        } else {
+                                            System.out.println("The average city price in our databse is "
+                                                    + ListingDao.giveAvgListingPrice());
+                                        }
+                                        System.out.println("Please enter the price that you want to list");
+                                        double price = scanner.nextDouble();
+                                        scanner.nextLine();
                                         Listing listing = new Listing(lidx, hid, type, price, latitude, longitude,
                                                 address2, postal,
                                                 city,
@@ -449,6 +566,134 @@ public class App {
                                         for (Listing l : listings2) {
                                             System.out.println(l);
                                         }
+                                        System.out.println("Do you want to add amenities to your listing? [ y/n ]");
+                                        ListingAmentitiesDao.findAvgAmmenityPrice();
+
+                                        String amenity = scanner.nextLine();
+                                        if (amenity.equals("y")) {
+                                            listing_entered = 0;
+
+                                            while (listing_entered == 0) {
+                                                System.out.println("Please enter your choice:");
+                                                System.out.println(
+                                                        "1. View Amenitites 2. View Listing Reviews 3. Give Review for renter 4. Go back to Listing page");
+                                                int x3 = scanner.nextInt();
+
+                                                switch (x3) {
+                                                    case 1:
+                                                        System.out.println("View Amenitites for the listing");
+                                                        ArrayList<ListingAmentities> amenities2 = ListingAmentitiesDao
+                                                                .readAmenitiesforListingforlid(lidx);
+                                                        for (ListingAmentities a : amenities2) {
+                                                            System.out.println(a);
+                                                        }
+                                                        int listing_amenity = 0;
+                                                        while (listing_amenity == 0) {
+                                                            System.out.println("Please enter your choice:");
+                                                            System.out.println(
+                                                                    "1. Add new amenity 2. Delete amenity 3. Go back to your Listing");
+                                                            int aid2 = scanner.nextInt();
+                                                            scanner.nextLine();
+                                                            switch (aid2) {
+                                                                case 1:
+                                                                    ListingAmentitiesDao.mostCommonAmmenitites();
+                                                                    System.out.println(
+                                                                            "Here are all the amenities you can add");
+                                                                    amenities = AmenitiesDao.readAmenities();
+                                                                    for (Amenities a : amenities) {
+                                                                        System.out.println(a);
+                                                                    }
+                                                                    System.out.println(
+                                                                            "Add new amenity from above: aid");
+                                                                    int aid1 = scanner.nextInt();
+                                                                    scanner.nextLine();
+                                                                    ListingAmentities amenity2 = new ListingAmentities(
+                                                                            lidx,
+                                                                            aid1);
+                                                                    System.out.println(
+                                                                            "View updated Amentities for your Listing");
+                                                                    ListingAmentitiesDao
+                                                                            .createListingAmentities(amenity2);
+                                                                    amenities2 = ListingAmentitiesDao
+                                                                            .readAmenitiesforListingforlid(lidx);
+                                                                    for (ListingAmentities a : amenities2) {
+                                                                        System.out.println(a);
+                                                                    }
+                                                                    break;
+                                                                case 2:
+                                                                    System.out.println(
+                                                                            "Here are all the amenities for your listing");
+                                                                    amenities2 = ListingAmentitiesDao
+                                                                            .readAmenitiesforListingforlid(lidx);
+                                                                    for (ListingAmentities a : amenities2) {
+                                                                        System.out.println(a);
+                                                                    }
+                                                                    System.out.println("Delete amenity: aid");
+                                                                    aid1 = scanner.nextInt();
+                                                                    ListingAmentitiesDao
+                                                                            .deleteListingAmentities(aid1, lidx);
+                                                                    System.out.println(
+                                                                            "View updated Amentities for hosts");
+                                                                    amenities2 = ListingAmentitiesDao
+                                                                            .readAmenitiesforListingforlid(lidx);
+                                                                    for (ListingAmentities a : amenities2) {
+                                                                        System.out.println(a);
+                                                                    }
+                                                                    break;
+                                                                case 3:
+                                                                    listing_amenity = 1;
+                                                                    System.out.println("Go back to your Listing");
+                                                                    break;
+                                                            }
+                                                        }
+                                                        break;
+                                                }
+                                                break;
+                                            }
+                                        }
+                                        break;
+
+                                    case 4:
+                                        System.out.println("Make a listing unavailable: lid, date (YYYY-MM-DD)");
+                                        int lida = scanner.nextInt();
+                                        scanner.nextLine();
+                                        String datea = scanner.nextLine();
+                                        System.out.println("Enter the cid");
+                                        int cida = scanner.nextInt();
+                                        scanner.nextLine();
+                                        ArrayList<Calender> calender2 = CalenderDao.readCalenderForLid(lida);
+                                        int counter = 0;
+                                        for (Calender c : calender2) {
+                                            if (c.getLid() == lida) {
+                                                // present date is present_date, teh start date is start adn end date is
+                                                // end in teh calendar
+                                                // if the present date is between start and end date then dont update
+                                                // give code
+                                                String start = c.getStart();
+                                                String end = c.getEnd();
+                                                // Get the current date
+                                                // Parse the start and end dates from strings to LocalDate objects
+                                                LocalDate startDate = LocalDate.parse(start);
+                                                LocalDate endDate = LocalDate.parse(end);
+                                                LocalDate presentDate2 = LocalDate.parse(datea);
+
+                                                // Check if the present day is between the start and end dates
+                                                boolean isBetween = presentDate2.isAfter(startDate)
+                                                        && presentDate2.isBefore(endDate);
+
+                                                // Print "yes" if present day is between start and end, otherwise print
+                                                // "no"
+                                                if (isBetween) {
+                                                    counter = 1;
+                                                }
+                                            }
+                                        }
+                                        if (counter == 0) {
+                                            CalenderDao.createCalender(cida, datea, datea, lida);
+                                        } else {
+                                            System.out.println(
+                                                    "You cannot change the availability of the listing for this date as it's already booked");
+                                        }
                                         break;
 
                                     case 5:
@@ -456,29 +701,53 @@ public class App {
                                                 "Update Listing: lid, hid, type, price, latitude, longitude, address, postal, city, country");
                                         lid = scanner.nextInt();
                                         scanner.nextLine();
-                                        hid = scanner.nextInt();
-                                        scanner.nextLine();
-                                        type = scanner.nextLine();
+                                        hid = uid;
                                         price = scanner.nextDouble();
                                         scanner.nextLine();
-                                        latitude = scanner.nextDouble();
-                                        scanner.nextLine();
-                                        longitude = scanner.nextDouble();
-                                        scanner.nextLine();
-                                        address2 = scanner.nextLine();
-                                        postal = scanner.nextLine();
-                                        city = scanner.nextLine();
-                                        country = scanner.nextLine();
                                         if (hid != uid) {
                                             System.out.println("You are not the host of this listing");
                                             break;
                                         }
-                                        ListingDao.updateListing(lid, hid, type, price, latitude, longitude, address2,
-                                                postal, city, country);
-                                        System.out.println("Here are your updated Listings");
-                                        listings2 = ListingDao.readListingforHost(uid);
-                                        for (Listing l : listings2) {
-                                            System.out.println(l);
+                                        // check if teh listing is there in the calender for lid
+                                        // if yes then dont update
+                                        // if no then update
+                                        ArrayList<Calender> calender = CalenderDao.readCalenderForLid(lid);
+                                        for (Calender c : calender) {
+                                            if (c.getLid() == lid) {
+                                                // present date is present_date, teh start date is start adn end date is
+                                                // end in teh calendar
+                                                // if the present date is between start and end date then dont update
+                                                // give code
+                                                String start = c.getStart();
+                                                String end = c.getEnd();
+                                                String[] start_date = start.split("-");
+                                                String[] end_date = end.split("-");
+                                                String present_date = present_day;
+                                                String[] presentdsd = present_date.split("-");
+                                                // Get the current date
+                                                LocalDate presentDate = LocalDate.now();
+
+                                                // Parse the start and end dates from strings to LocalDate objects
+                                                LocalDate startDate = LocalDate.parse(start);
+                                                LocalDate endDate = LocalDate.parse(end);
+
+                                                // Check if the present day is between the start and end dates
+                                                boolean isBetween = presentDate.isAfter(startDate)
+                                                        && presentDate.isBefore(endDate);
+
+                                                // Print "yes" if present day is between start and end, otherwise print
+                                                // "no"
+                                                if (isBetween) {
+                                                    System.out.println("You cannot update the listing as it is booked");
+                                                } else {
+                                                    ListingDao.updateListing(lid, hid, price);
+                                                    System.out.println("Here are your updated Listings");
+                                                    listings2 = ListingDao.readListingforHost(uid);
+                                                    for (Listing l : listings2) {
+                                                        System.out.println(l);
+                                                    }
+                                                }
+                                            }
                                         }
                                         break;
 
@@ -543,16 +812,26 @@ public class App {
                                         System.out.println("Please enter your credit card information");
                                         String ccInfo = scanner.nextLine();
                                         scanner.nextLine();
-                                        String book_date = "2020-11-11";
+                                        String book_date = present_day;
                                         double cost = ListingDao.getPricing(lid);
                                         System.out.println("The cost of your booking is: " + cost);
+                                        System.out.println("Please enter the cid of the listing you want to book");
+                                        int cidbooking = scanner.nextInt();
+                                        scanner.nextLine();
                                         System.out.println("Please enter 1 to confirm your booking or 0 to cancel");
+                                        // please print the year, month and days for this start
+                                        // and end date
+                                        String[] dateParts = start.split("-");
+                                        System.out.println("Year: " + dateParts[0]);
+                                        System.out.println("Month: " + dateParts[1]);
+                                        System.out.println("Day: " + dateParts[2]);
                                         int confirm = scanner.nextInt();
                                         if (confirm == 1) {
                                             Booking booking = new Booking(bid, lid, uid, book_date, start, end, cost,
                                                     ccInfo,
                                                     false);
                                             BookingDao.createBooking(booking);
+                                            CalenderDao.createCalender(cidbooking, start, end, lid);
                                             System.out.println("Your booking has been confirmed");
                                         } else {
                                             System.out.println("Your booking has been cancelled");
@@ -591,10 +870,14 @@ public class App {
                                     case 1:
                                         System.out.println("Please enter the bid of the booking you want to cancel");
                                         int bid2 = scanner.nextInt();
-                                        BookingDao.deleteBooking(bid2);
+                                        scanner.nextLine();
+                                        // enter the cid of the booking
+                                        System.out.println("Please enter the cid of the booking you want to cancel");
+                                        int cidcancel = scanner.nextInt();
+                                        scanner.nextLine();
+                                        CalenderDao.deleteCalender(cidcancel);
+                                        BookingDao.cancelBooking(bid2);
                                         System.out.println("Your booking has been cancelled");
-                                        System.out.println("Here are your updated Bookings");
-                                        BookingDao.readBookingforUser(uid);
                                         break;
                                     case 9:
                                         booking = 1;
@@ -604,6 +887,9 @@ public class App {
                                         System.out.println("Please enter the bid of the booking you want to update");
                                         int bid3 = scanner.nextInt();
                                         scanner.nextLine();
+                                        System.out.println("Please enter the cid of the booking you want to update");
+                                        int cidupdate = scanner.nextInt();
+                                        scanner.nextLine();
                                         System.out.println(
                                                 "Please enter the start date of your booking in the format YYYY-MM-DD");
                                         String start2 = scanner.nextLine();
@@ -611,12 +897,12 @@ public class App {
                                                 "Please enter the end date of your booking in the format YYYY-MM-DD");
                                         String end2 = scanner.nextLine();
 
-                                        String book_date2 = "2020-11-11";
+                                        String book_date2 = present_day;
                                         System.out.println("Please enter 1 to update your booking or 0 to cancel");
                                         int confirm2 = scanner.nextInt();
                                         if (confirm2 == 1) {
                                             BookingDao.updateBooking(bid3, book_date2, start2, end2, false);
-                                            System.out.println("Your booking has been confirmed");
+                                            CalenderDao.updateCalender(cidupdate, start2, end2);
                                         } else {
                                             System.out.println("Your booking has been cancelled");
                                         }
@@ -638,7 +924,7 @@ public class App {
                                         scanner.nextLine();
                                         System.out.println("Please enter your review for the listing");
                                         String body = scanner.nextLine();
-                                        String date = "2020-11-11";
+                                        String date = present_day;
                                         ListRatingDao.createListRating(lrid, uid, lid3, rating, body, date);
                                 }
                             }
