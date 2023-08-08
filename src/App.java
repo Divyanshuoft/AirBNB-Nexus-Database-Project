@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import javax.swing.text.StyledEditorKit;
@@ -19,11 +20,13 @@ public class App {
 
     // Print the present date
     public static void main(String[] args) throws Exception {
-        ListRatingDao.CombinedBodyForListing(53);
         while (exit_program == 0) {
             int logged_in = 0;
-            System.out.println("Welcome to MyBNB!");
-            System.out.print("1. Login 2. Register 3. Exit ");
+            System.out.println("\n********************************************");
+            System.out.println("Welcome to MyBNB! ~ by Divyansh Kachchhava\n");
+            System.out.println("Please choose an option:");
+            System.out.println("1. Login \n2. Register\n3. Exit");
+            System.out.print("\nEnter your choice: ");
             Scanner scanner = new Scanner(System.in);
             int choice = scanner.nextInt();
             if (choice < 1 || choice > 3) {
@@ -36,24 +39,60 @@ public class App {
                 // write code to exit the program on terminal
                 break;
             } else if (choice == 2) {
-                System.out.println("Please register: enter");
-                System.out.println("name, address, dob, occupation, sin, payment_info");
+                System.out.println("\n********************************************");
+                System.out.println("Please register to continue");
+                System.out.println("Please enter your username: ");
                 scanner.nextLine();
                 String name = scanner.nextLine();
                 int id = name.hashCode();
+                System.out.println("Your user id is: " + id + "\nPlease remember it for future use");
+                System.out.println("Please enter your address: ");
                 String address = scanner.nextLine();
+                System.out.println("Please enter your date of birth in the format yyyy-mm-dd: ");
                 String dob = scanner.nextLine();
+                // get the age from the dob
+                int age = 0;
+                String[] dob_split = dob.split("-");
+                int year = Integer.parseInt(dob_split[0]);
+                int month = Integer.parseInt(dob_split[1]);
+                int day = Integer.parseInt(dob_split[2]);
+                if (month > currentDate.getMonthValue()) {
+                    age = currentDate.getYear() - year - 1;
+                } else if (month == currentDate.getMonthValue()) {
+                    if (day > currentDate.getDayOfMonth()) {
+                        age = currentDate.getYear() - year - 1;
+                    } else {
+                        age = currentDate.getYear() - year;
+                    }
+                } else {
+                    age = currentDate.getYear() - year;
+                }
+                if (age >= 18) {
+                    System.out.println(
+                            "You are eligible to register as your age is " + age + " which is greater than 18");
+                } else {
+                    System.out.println(
+                            "You are not eligible to register as your age is " + age + " which is less than 18");
+                    exit_program = 1;
+                    break;
+                }
+                System.out.println("Please enter your occupation: ");
                 String occupation = scanner.nextLine();
+                System.out.println("Please enter your social insurance number: ");
                 String sin = scanner.nextLine();
+                System.out.println("Please enter your payment information: ");
                 String payment_info = scanner.nextLine();
                 Employee employee = new Employee(id, name, address, dob, occupation, sin, payment_info);
                 EmployeeDao.createEmployee(employee);
                 System.out.println(name);
             } else {
-                System.out.println("Login User");
-                System.out.println("Enter UID and Username");
+                System.out.println("\n********************************************");
+
+                System.out.println("\nPlease enter your credentials to login");
+                System.out.println("Enter your uid (id) which you received while registering");
                 uid = scanner.nextInt();
                 scanner.nextLine();
+                System.out.println("Enter your username (name) which you received while registering");
                 String username = scanner.nextLine();
                 boolean x = EmployeeDao.loginEmployee(uid, username);
                 if (x == false) {
@@ -64,18 +103,33 @@ public class App {
                     logged_in = 0;
                 }
                 while (logged_in == 0) {
+                    System.out.println("\n********************************************");
+                    System.out.println("\nWelcome " + username + "!");
+                    System.out.println("\nToday date is " + present_day);
+                    System.out.println("\nPlease choose an option:");
                     System.out.println(
-                            "2. Read User 3. Search Listing 5. Your Listings 6. Book a new Listing 7. View your Bookings 8. View Amentities for hosts 10. View reviews 9. Logout");
-                    System.out.print("\nEnter your choice: ");
+                            "2. Read User\n3. Search Listing\n5. Your Listings\n6. Book a new Listing\n7. View your Bookings\n8. View Amentities for hosts\n10. View reviews\n9. Logout\n11. Delete your account\n");
+                    System.out.print("Enter your choice: ");
                     scanner = new Scanner(System.in);
                     choice = scanner.nextInt();
-
-                    // if (choice < 1 || choice > 8) {
-                    // System.out.println("Invalid choice");
-                    // continue;
-                    // }
-
                     switch (choice) {
+                        case 11:
+                            System.out.println("Delete your account");
+                            System.out.println("Are you sure you want to delete your account? (y/n)");
+                            scanner.nextLine();
+                            String delete = scanner.nextLine();
+
+                            if (delete.equals("y")) {
+                                EmployeeDao.deleteEmployee(uid);
+                                System.out.println("Your account has been deleted");
+                                logged_in = 1;
+                                break;
+                            } else {
+                                System.out.println("Your account has not been deleted");
+                                logged_in = 0;
+                                break;
+                            }
+
                         case 2:
                             System.out.println("Read User");
                             ArrayList<Employee> employees = EmployeeDao.readEmployees();
@@ -89,7 +143,7 @@ public class App {
                             while (search_id == 0) {
                                 System.out.println("Enter your choice:");
                                 System.out.println(
-                                        "1. Total booking for a city with a zipcode");
+                                        "1. Total booking for a city with a zipcode 2. Search listing with date range and location");
                                 int search = scanner.nextInt();
                                 scanner.nextLine();
                                 switch (search) {
@@ -99,6 +153,39 @@ public class App {
                                         System.out.println("Enter Zipcode");
                                         String zipcode = scanner.nextLine();
                                         BookingDao.totalBookingForCityZip(zipcode, city);
+                                        break;
+
+                                    case 2:
+
+                                        System.out.println("Enter start date");
+                                        String start_date = scanner.nextLine();
+                                        System.out.println("Enter end date");
+                                        String end_date = scanner.nextLine();
+                                        System.out.println("Enter city");
+                                        String city3 = scanner.nextLine();
+                                        System.out.println("Enter Zipcode");
+                                        String zipcode4 = scanner.nextLine();
+                                        System.out.println("Enter Country");
+                                        String countryq = scanner.nextLine();
+                                        System.out.println("Enter price range (min)");
+                                        double min = scanner.nextDouble();
+                                        System.out.println("Enter price range (max)");
+                                        double max = scanner.nextDouble();
+                                        ArrayList<Integer> user_ids = new ArrayList<Integer>();
+                                        System.out.println(
+                                                "\nPlease enter the array for the aid you want to use: (a1, a2, a3)");
+                                        Scanner scanner2 = new Scanner(System.in);
+                                        String aid112 = scanner2.nextLine();
+                                        String[] aid_split = aid112.split(",");
+                                        for (int i = 0; i < aid_split.length; i++) {
+                                            user_ids.add(Integer.parseInt(aid_split[i]));
+                                        }
+                                        ArrayList<Listing> tt = ListingDao.countrycitypostalsearch2(countryq, city3,
+                                                zipcode4, start_date,
+                                                end_date, min, max, user_ids, uid);
+                                        for (Listing l : tt) {
+                                            System.out.println(l);
+                                        }
                                         break;
 
                                     // case 1:
@@ -287,7 +374,6 @@ public class App {
                             System.out
                                     .println("Here are the reviews where you are either the host or the guest");
                             UserRatingDao.readUserRatingforUser(uid);
-
                             break;
 
                         case 8:
@@ -386,22 +472,54 @@ public class App {
 
                                 switch (x7) {
                                     case 1:
-                                        System.out.println("Here are your Listings");
+                                        System.out.println(
+                                                "*****************************************************************");
+                                        System.out.println("Here are the Listings which you have created");
+
                                         listings2 = ListingDao.readListingforHost(uid);
                                         for (Listing l : listings2) {
                                             System.out.println(l);
                                         }
-                                        System.out.println("Please enter the listing id");
+                                        System.out.println("\nPlease enter the listing id you want to view");
                                         int lid = scanner.nextInt();
                                         int listing_entered = 0;
-
+                                        if (ListingDao.getuser(lid) != uid) {
+                                            System.out.println("You are not the host for this listing");
+                                            listing_entered = 1;
+                                        }
                                         while (listing_entered == 0) {
-                                            System.out.println("Please enter your choice:");
+                                            System.out.print("Please enter your choice:");
                                             System.out.println(
-                                                    "1. View Amenitites 2. View Listing Reviews 3. Give Review for renter 4. Go back to Listing page");
+                                                    "1. View Amenitites 2. View Listing Reviews 3. Give Review for renter 4. Go back to Listing page 5. View booking history for this listing 6. Delete booking for your listing");
                                             int x3 = scanner.nextInt();
 
                                             switch (x3) {
+                                                case 6:
+                                                    System.out.println("Here are the bookings for this listing");
+                                                    ArrayList<Booking> bookings2 = BookingDao
+                                                            .readBookingforListing(lid);
+                                                    for (Booking b : bookings2) {
+                                                        System.out.println(b);
+                                                    }
+                                                    System.out.println("Please enter the booking id");
+                                                    int bid = scanner.nextInt();
+                                                    BookingDao.deleteBooking(bid);
+                                                    System.out
+                                                            .println(
+                                                                    "Here are the updated bookings after cancelling booking");
+                                                    bookings2 = BookingDao.readBookingforListing(lid);
+                                                    for (Booking b : bookings2) {
+                                                        System.out.println(b);
+                                                    }
+                                                    break;
+                                                case 5:
+                                                    System.out.println("Here is the booking history for this listing");
+                                                    ArrayList<Booking> bookings21 = BookingDao
+                                                            .readBookingforListing(lid);
+                                                    for (Booking b : bookings21) {
+                                                        System.out.println(b);
+                                                    }
+                                                    break;
                                                 case 1:
                                                     System.out.println("View Amenitites for the listing");
                                                     ArrayList<ListingAmentities> amenities2 = ListingAmentitiesDao
@@ -704,8 +822,8 @@ public class App {
                                         hid = uid;
                                         price = scanner.nextDouble();
                                         scanner.nextLine();
-                                        if (hid != uid) {
-                                            System.out.println("You are not the host of this listing");
+                                        if (ListingDao.getuser(lid) != uid) {
+                                            System.out.println("You are not the owner of this listing");
                                             break;
                                         }
                                         // check if teh listing is there in the calender for lid
@@ -754,6 +872,10 @@ public class App {
                                     case 6:
                                         System.out.println("Delete Listing: lid");
                                         lid = scanner.nextInt();
+                                        if (ListingDao.getuser(lid) != uid) {
+                                            System.out.println("You are not the owner of this listing");
+                                            break;
+                                        }
                                         ListingDao.deleteListing(lid);
                                         System.out.println("Here are your updated Listings");
                                         listings2 = ListingDao.readListingforHost(uid);
@@ -785,7 +907,9 @@ public class App {
                             System.out.println("Please select a listing from the following listings");
                             ArrayList<Listing> listings5 = ListingDao.readListing();
                             for (Listing l : listings5) {
-                                System.out.println(l);
+                                if (l.getHid() != uid) {
+                                    System.out.println(l);
+                                }
                             }
                             System.out.println("Please enter the lid of the listing you want to view");
                             int lid2 = scanner.nextInt();
@@ -798,10 +922,12 @@ public class App {
                                 int x3 = scanner.nextInt();
                                 switch (x3) {
                                     case 1:
-                                        System.out.println("Please enter bid");
-                                        int bid = scanner.nextInt();
-                                        System.out.println("Please enter the lid of the listing you want to book");
-                                        int lid = scanner.nextInt();
+                                        int lid = lid2;
+                                        int bid = 100 * lid2 + 10 * uid;
+                                        if (ListingDao.getuser(lid) == uid) {
+                                            System.out.println("You cannot book your own listing");
+                                            break;
+                                        }
                                         scanner.nextLine();
                                         System.out.println(
                                                 "Please enter the start date of your booking in the format YYYY-MM-DD");
@@ -809,16 +935,57 @@ public class App {
                                         System.out.println(
                                                 "Please enter the end date of your booking in the format YYYY-MM-DD");
                                         String end = scanner.nextLine();
+                                        ArrayList<Calender> calender = CalenderDao.readCalenderForLid(lid);
+                                        int counter = 0;
+                                        for (Calender c : calender) {
+                                            if (c.getLid() == lid) {
+
+                                                String start2 = c.getStart();
+                                                String end2 = c.getEnd();
+
+                                                String[] start_date = start.split("-");
+                                                String[] end_date = end.split("-");
+                                                String[] start_date2 = start2.split("-");
+                                                String[] end_date2 = end2.split("-");
+
+                                                String present_date = present_day;
+
+                                                // Parse the start and end dates from strings to LocalDate objects
+                                                LocalDate startDate = LocalDate.parse(start);
+                                                LocalDate endDate = LocalDate.parse(end);
+
+                                                LocalDate startDate2 = LocalDate.parse(start2);
+                                                LocalDate endDate2 = LocalDate.parse(end2);
+
+                                                // Check if the the user selected date is between the start and end
+                                                // dates
+                                                boolean isBetween = startDate.isAfter(startDate2)
+                                                        || endDate.isBefore(endDate2);
+
+                                                // Print "yes" if present day is between start and end, otherwise print
+                                                // "no"
+                                                if (isBetween) {
+                                                    counter++;
+                                                }
+                                            }
+                                        }
+                                        if (counter != 0) {
+                                            System.out.println("You cannot book the listing as it is booked");
+                                            break;
+                                        }
+                                        System.out.println("You can book the listing as it's not yet booked");
                                         System.out.println("Please enter your credit card information");
                                         String ccInfo = scanner.nextLine();
                                         scanner.nextLine();
                                         String book_date = present_day;
                                         double cost = ListingDao.getPricing(lid);
                                         System.out.println("The cost of your booking is: " + cost);
-                                        System.out.println("Please enter the cid of the listing you want to book");
+                                        System.out.println(
+                                                "Please enter the cid of the listing you want to book");
                                         int cidbooking = scanner.nextInt();
                                         scanner.nextLine();
-                                        System.out.println("Please enter 1 to confirm your booking or 0 to cancel");
+                                        System.out.println(
+                                                "Please enter 1 to confirm your booking or 0 to cancel");
                                         // please print the year, month and days for this start
                                         // and end date
                                         String[] dateParts = start.split("-");
@@ -827,7 +994,8 @@ public class App {
                                         System.out.println("Day: " + dateParts[2]);
                                         int confirm = scanner.nextInt();
                                         if (confirm == 1) {
-                                            Booking booking = new Booking(bid, lid, uid, book_date, start, end, cost,
+                                            Booking booking = new Booking(bid, lid, uid, book_date, start,
+                                                    end, cost,
                                                     ccInfo,
                                                     false);
                                             BookingDao.createBooking(booking);
@@ -835,6 +1003,7 @@ public class App {
                                             System.out.println("Your booking has been confirmed");
                                         } else {
                                             System.out.println("Your booking has been cancelled");
+
                                         }
                                         break;
                                     case 2:
@@ -844,6 +1013,9 @@ public class App {
                                         for (ListingRating l : reviews) {
                                             System.out.println(l);
                                         }
+
+                                        System.out.println("These are the top 5 word clouds for this listing");
+                                        ListRatingDao.CombinedBodyForListing(lid2);
                                         break;
 
                                     case 3:
@@ -871,12 +1043,18 @@ public class App {
                                         System.out.println("Please enter the bid of the booking you want to cancel");
                                         int bid2 = scanner.nextInt();
                                         scanner.nextLine();
+                                        if (BookingDao.checkBooking(bid2, uid) == false) {
+                                            System.out.println(
+                                                    "You cannot cancel the booking as you did not make the booking");
+                                            break;
+                                        }
                                         // enter the cid of the booking
-                                        System.out.println("Please enter the cid of the booking you want to cancel");
+                                        System.out
+                                                .println("Please enter the cid of the booking you want to cancel");
                                         int cidcancel = scanner.nextInt();
                                         scanner.nextLine();
                                         CalenderDao.deleteCalender(cidcancel);
-                                        BookingDao.cancelBooking(bid2);
+                                        BookingDao.deleteBooking2(bid2);
                                         System.out.println("Your booking has been cancelled");
                                         break;
                                     case 9:
@@ -916,13 +1094,21 @@ public class App {
                                         System.out.println("Please enter the lid of the listing you want to review");
                                         int lid3 = scanner.nextInt();
                                         scanner.nextLine();
-                                        System.out.println("Please enter the lrid for the listing you want to give");
-                                        int lrid = scanner.nextInt();
-                                        scanner.nextLine();
-                                        System.out.println("Please enter your rating for the listing");
+                                        if (BookingDao.checkBooking2(lid3, uid) == false) {
+                                            System.out.println(
+                                                    "You cannot cancel the booking as you did not make the booking");
+                                            break;
+                                        }
+                                        if (ListingDao.getuser(lid3) == uid) {
+                                            System.out.println("You cannot review your own listing");
+                                            break;
+                                        }
+                                        int lrid = uid + lid3 * 10;
+                                        System.out.println("Please enter your rating for the listing from 1 to 5");
                                         int rating = scanner.nextInt();
                                         scanner.nextLine();
-                                        System.out.println("Please enter your review for the listing");
+                                        System.out
+                                                .println("Please give your review for the listing, how was your stay?");
                                         String body = scanner.nextLine();
                                         String date = present_day;
                                         ListRatingDao.createListRating(lrid, uid, lid3, rating, body, date);

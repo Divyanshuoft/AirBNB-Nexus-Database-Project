@@ -3,7 +3,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import com.mysql.cj.x.protobuf.MysqlxExpr.Array;
+
 import java.sql.Statement;
+import java.time.LocalDate;
 
 public class ListingDao {
     String[] bigCities = {
@@ -310,7 +314,6 @@ public class ListingDao {
                     resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
@@ -424,6 +427,84 @@ public class ListingDao {
         return listings;
     }
 
+    public static ArrayList<Listing> countrycitypostalsearch2(String country, String city, String postal, String start,
+            String end, double min, double max, ArrayList<Integer> amm, int h)
+            throws SQLException {
+        ArrayList<Calender> listings1 = new ArrayList<Calender>();
+        Connection conn = DB.connect();
+        String query = Query.listingreadcountrycitypostal2;
+        ArrayList<Listing> listings = new ArrayList<Listing>();
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        ArrayList<ListingAmentities> listings2 = new ArrayList<ListingAmentities>();
+        // static String listingreadcountrycitypostal = "SELECT * FROM listing WHERE
+        // country = ? AND city = ? AND postal = ?";
+        preparableStatement.setString(1, country);
+        preparableStatement.setString(2, city);
+        String x = postal.substring(0, 3) + "%";
+        preparableStatement.setString(3, x);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        while (resultSet.next()) {
+            Listing listing = new Listing(resultSet.getInt(1), resultSet.getInt(2), resultSet.getString(3),
+                    resultSet.getDouble(4), resultSet.getDouble(5), resultSet.getDouble(6),
+                    resultSet.getString(7), resultSet.getString(8), resultSet.getString(9),
+                    resultSet.getString(10));
+            int listing_id = listing.getLid();
+            listings2 = ListingAmentitiesDao.readAmenitiesforListingforlid(listing_id);
+            ArrayList<Integer> listingk = new ArrayList<Integer>();
+            for (ListingAmentities listingAmentities : listings2) {
+                listingk.add(listingAmentities.getAid());
+            }
+            // check if the all the elements of amm are in listingk
+
+            listings1 = CalenderDao.checkIfBookingAvailabCalender(start, end, listing_id);
+            double price = listing.getPrice();
+            int host_id = listing.getHid();
+            ArrayList<Listing> pp = ListingNotinCalender();
+            for (Calender calender : listings1) {
+                int lid5 = calender.getLid();
+                if (lid5 == listing_id && price >= min && price <= max && host_id != h && listingk.containsAll(amm)) {
+                    // check for already existing listing
+                    if (!listings.contains(listing)) {
+                        listings.add(listing);
+                    }
+                }
+            }
+            // add the listing which are in listing but not in calender to listings
+            for (Listing listing2 : pp) {
+                if (listing2.getPrice() >= min && listing2.getPrice() <= max && host_id != h
+                        && listingk.containsAll(amm)) {
+                    if (!listings.contains(listing)) {
+                        listings.add(listing);
+                    }
+                }
+            }
+        }
+        System.out.println("Listings read successfully");
+        preparableStatement.close();
+        return listings;
+    }
+
+    // give function for this static String listingreadnotincalender = "SELECT *
+    // FROM listing WHERE lid NOT IN (SELECT lid FROM calendar)";
+    public static ArrayList<Listing> ListingNotinCalender() throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.listingreadnotincalender;
+        ArrayList<Listing> listings = new ArrayList<Listing>();
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        // static String listingreadnotincalender = "SELECT * FROM listing WHERE lid
+        // NOT IN (SELECT lid FROM calendar)";
+        ResultSet resultSet = preparableStatement.executeQuery();
+        while (resultSet.next()) {
+            Listing listing = new Listing(resultSet.getInt(1), resultSet.getInt(2), resultSet.getString(3),
+                    resultSet.getDouble(4), resultSet.getDouble(5), resultSet.getDouble(6),
+                    resultSet.getString(7), resultSet.getString(8), resultSet.getString(9),
+                    resultSet.getString(10));
+            listings.add(listing);
+        }
+        preparableStatement.close();
+        return listings;
+    }
+
     public static void ListingHostCountryRanking(String country) throws SQLException {
         Connection conn = DB.connect();
         String query = Query.listingreadcountryhost;
@@ -500,5 +581,20 @@ public class ListingDao {
         }
         preparableStatement.close();
         return total;
+    }
+
+    public static int getuser(int lid) throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.listinggetuser;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        // static String listinggetuser = "SELECT uid FROM listing WHERE lid = ?";
+        preparableStatement.setInt(1, lid);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        int uid = 0;
+        while (resultSet.next()) {
+            uid = resultSet.getInt(1);
+        }
+        preparableStatement.close();
+        return uid;
     }
 }

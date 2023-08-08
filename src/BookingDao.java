@@ -150,18 +150,48 @@ public class BookingDao {
                     resultSet.getDouble(7), resultSet.getString(8), resultSet.getBoolean(9));
             bookings.add(booking);
         }
-        System.out.println("Bookings read successfully");
         preparableStatement.close();
         return bookings;
     }
 
-    public static void cancelBooking(int bid2) throws SQLException {
+    // give code for this static String bookingdelete = "DELETE FROM booking WHERE
+    // bid = ?";
+    public static void deleteBooking2(int id) throws SQLException {
         Connection conn = DB.connect();
-        String query = Query.bookingcancel;
+        String query = Query.bookingdelete;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        preparableStatement.setInt(1, bid2);
+        preparableStatement.setInt(1, id);
+        System.out.println("Booking deleted successfully");
         preparableStatement.execute();
         preparableStatement.close();
+    }
+
+    public static boolean checkBooking(int bid, int rid) throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.bookingreadforlisting2;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        preparableStatement.setInt(1, bid);
+        preparableStatement.setInt(2, rid);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        if (resultSet.next()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean checkBooking2(int lid, int rid) throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.bookingreadforlisting3;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        preparableStatement.setInt(1, lid);
+        preparableStatement.setInt(2, rid);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        if (resultSet.next()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static void mostcancellation() throws SQLException {
