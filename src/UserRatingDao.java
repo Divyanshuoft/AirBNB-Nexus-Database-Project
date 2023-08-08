@@ -62,7 +62,6 @@ public class UserRatingDao {
     }
 
     public static void readUserRatingforUser(int uid) throws SQLException {
-        // give the Here are the reviews whereeither you are the host or the guest
         Connection conn = DB.connect();
         String query = Query.userratingreadforuser;
         PreparedStatement preparableStatement = conn.prepareStatement(query);

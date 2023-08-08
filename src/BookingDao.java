@@ -3,8 +3,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -23,7 +26,6 @@ public class BookingDao {
         preparableStatement.setDouble(7, booking.getCost());
         preparableStatement.setString(8, booking.getCcInfo());
         preparableStatement.setBoolean(9, booking.isIs_cancelled());
-        System.out.println("Booking created successfully");
         preparableStatement.execute();
         preparableStatement.close();
     }
@@ -40,13 +42,11 @@ public class BookingDao {
                     resultSet.getString(8), resultSet.getBoolean(9));
             bookings.add(booking);
         }
-        System.out.println("Bookings read successfully");
         statement.close();
         return bookings;
     }
 
     public static void readBooking2(String start, String end) throws SQLException {
-        ArrayList<Booking> bookings = new ArrayList<Booking>();
         Connection conn = DB.connect();
         String query = Query.bookingread;
         String s = start;
@@ -55,14 +55,10 @@ public class BookingDao {
         LocalDate endDate2 = LocalDate.parse(e);
         Statement statement = conn.createStatement();
         ResultSet resultSet = statement.executeQuery(query);
-        ArrayList<Integer> Rids = new ArrayList<Integer>();
-        // create a linkedlist that contains 2 feilds rid and count
-        // Map<int, int> map = new HashMap<int, int>();
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         while (resultSet.next()) {
             LocalDate startDate1 = LocalDate.parse(resultSet.getString(5));
             LocalDate endDate1 = LocalDate.parse(resultSet.getString(6));
-            // Check if (start1, end1) lies within (start2, end2)
             boolean isWithin = startDate1.isAfter(startDate2)
                     && endDate1.isBefore(endDate2);
             if (isWithin) {
@@ -79,8 +75,6 @@ public class BookingDao {
                 }
             }
         }
-        // sort the map by value of rid whichis the key
-
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             System.out
                     .println("User ID: " + entry.getKey() + " has rented: " + entry.getValue() + " time betwen " + start
@@ -88,7 +82,6 @@ public class BookingDao {
         }
         System.out.println("Bookings read successfully");
         statement.close();
-        // return bookings;
     }
 
     public static void deleteBooking(int id) throws SQLException {
@@ -96,7 +89,6 @@ public class BookingDao {
         String query = Query.bookingdelete;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
         preparableStatement.setInt(1, id);
-        System.out.println("Booking deleted successfully");
         preparableStatement.execute();
         preparableStatement.close();
     }
@@ -111,7 +103,6 @@ public class BookingDao {
         preparableStatement.setString(3, end);
         preparableStatement.setBoolean(4, is_cancelled);
         preparableStatement.setInt(5, id);
-        System.out.println("Booking updated successfully");
         preparableStatement.execute();
         preparableStatement.close();
     }
@@ -154,14 +145,11 @@ public class BookingDao {
         return bookings;
     }
 
-    // give code for this static String bookingdelete = "DELETE FROM booking WHERE
-    // bid = ?";
     public static void deleteBooking2(int id) throws SQLException {
         Connection conn = DB.connect();
-        String query = Query.bookingdelete;
+        String query = Query.bookingcancel;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
         preparableStatement.setInt(1, id);
-        System.out.println("Booking deleted successfully");
         preparableStatement.execute();
         preparableStatement.close();
     }
@@ -200,8 +188,8 @@ public class BookingDao {
         PreparedStatement preparableStatement = conn.prepareStatement(query);
         ResultSet resultSet = preparableStatement.executeQuery();
         while (resultSet.next()) {
-            System.out.println("Listing ID: " + resultSet.getInt(1));
-            System.out.print(", Number of Cancellations: " + resultSet.getInt(2));
+            System.out.print("Listing ID: " + resultSet.getInt(1));
+            System.out.print(" Number of Cancellations: " + resultSet.getInt(2));
             System.out.println();
         }
         mostcancellationrid();
@@ -213,10 +201,22 @@ public class BookingDao {
         PreparedStatement preparableStatement = conn.prepareStatement(query);
         ResultSet resultSet = preparableStatement.executeQuery();
         while (resultSet.next()) {
-            System.out.println("Renter ID: " + resultSet.getInt(1));
-            System.out.print(", Number of Cancellations: " + resultSet.getInt(2));
+            System.out.print("Renter ID: " + resultSet.getInt(1));
+            System.out.print(" Number of Cancellations: " + resultSet.getInt(2));
             System.out.println();
         }
+    }
+
+    public static ArrayList<Integer> getListingIds() throws SQLException {
+        ArrayList<Integer> listingIds = new ArrayList<Integer>();
+        Connection conn = DB.connect();
+        String query = Query.bookingcancel12;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        while (resultSet.next()) {
+            listingIds.add(resultSet.getInt(1));
+        }
+        return listingIds;
     }
 
     public static void asdasd(String start_date, String end_date, String city) throws SQLException {
@@ -230,9 +230,6 @@ public class BookingDao {
         LocalDate endDate2 = LocalDate.parse(e);
         Statement statement = conn.createStatement();
         ResultSet resultSet = statement.executeQuery(query);
-        ArrayList<Integer> Rids = new ArrayList<Integer>();
-        // create a linkedlist that contains 2 feilds rid and count
-        // Map<int, int> map = new HashMap<int, int>();
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         while (resultSet.next()) {
             LocalDate startDate1 = LocalDate.parse(resultSet.getString(5));
@@ -261,8 +258,6 @@ public class BookingDao {
                 }
             }
         }
-        // sort the map by value of rid whichis the key
-
         for (
 
         Map.Entry<Integer, Integer> entry : map.entrySet()) {
@@ -271,7 +266,79 @@ public class BookingDao {
                             + start_date
                             + " and " + end_date + " in " + city);
         }
-        System.out.println("Bookings read successfully");
+        statement.close();
+    }
+
+    public static void asdasd2(String start_date, String end_date) throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.bookingread34;
+        String s = start_date;
+        String e = end_date;
+        LocalDate startDate2 = LocalDate.parse(s);
+        LocalDate endDate2 = LocalDate.parse(e);
+        Statement statement = conn.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        while (resultSet.next()) {
+            LocalDate startDate1 = LocalDate.parse(resultSet.getString(5));
+            LocalDate endDate1 = LocalDate.parse(resultSet.getString(6));
+            // System.out.println(resultSet.getString(5));
+            // System.out.println(resultSet.getString(6));
+            // System.out.println(resultSet.getString(14));
+            // System.out.println(resultSet.getString(15));
+            // System.out.println(resultSet.getString(16));
+
+            boolean isWithin = startDate1.isAfter(startDate2)
+                    && endDate1.isBefore(endDate2);
+            if (isWithin) {
+                // Booking booking = new Booking(resultSet.getInt(1), resultSet.getInt(2),
+                // resultSet.getInt(3),
+                // resultSet.getString(4), resultSet.getString(5), resultSet.getString(6),
+                // resultSet.getDouble(7),
+                // resultSet.getString(8), resultSet.getBoolean(9));
+                // bookings.add(booking);
+                // System.out.println("resultSet.getInt(3): " + resultSet.getInt(3));
+                if (map.containsKey(resultSet.getInt(3))) {
+                    map.put(resultSet.getInt(3), map.get(resultSet.getInt(3)) + 1);
+                } else {
+                    map.put(resultSet.getInt(3), 1);
+                }
+            }
+        }
+
+        // for (
+
+        // Map.Entry<Integer, Integer> entry : map.entrySet()) {
+        // System.out
+        // .println("User ID: " + entry.getKey() + " has rented: " + entry.getValue() +
+        // " time betwen "
+        // + start_date
+        // + " and " + end_date);
+        // }
+
+        List<Map.Entry<Integer, Integer>> list = new LinkedList<Map.Entry<Integer, Integer>>(map.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<Integer, Integer>>() {
+            public int compare(Map.Entry<Integer, Integer> o1,
+                    Map.Entry<Integer, Integer> o2) {
+                System.out.println("User ID: " + o1.getKey() + " has rented: " + o1.getValue() + " time betwen "
+                        + start_date + " and " + end_date);
+                return (o1.getValue()).compareTo(o2.getValue());
+            }
+        });
+
+        for (int i = list.size() - 1; i >= list.size(); i--) {
+            System.out.println("User ID: " + list.get(i).getKey() + " has rented: " + list.get(i).getValue()
+                    + " time betwen " + start_date + " and " + end_date);
+        }
+        // if the user has rented more than 2 times in the given period, then we print
+        // the user id
+        System.out.println("\nUsers who have rented more than 2 times between " + start_date + " and " + end_date);
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (entry.getValue() >= 2) {
+                System.out.println("User ID: " + entry.getKey() + " has rented more than 2 times between "
+                        + start_date + " and " + end_date);
+            }
+        }
         statement.close();
     }
 
@@ -295,8 +362,6 @@ public class BookingDao {
                 c2++;
             }
         }
-        // sort the map by value of rid whichis the key
-
         System.out.println("Total number of bookings in " + city + " between " + start_date + " and " + end_date
                 + " is: " + c2);
         System.out.println("Bookings read successfully");
@@ -326,7 +391,6 @@ public class BookingDao {
         int y = year;
         Statement statement = conn.createStatement();
         ResultSet resultSet = statement.executeQuery(query);
-        // create a linkedlist that contains 2 feilds rid and count
         // Map<int, int> map = new HashMap<int, int>();
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         while (resultSet.next()) {
@@ -351,8 +415,6 @@ public class BookingDao {
                 }
             }
         }
-        // sort the map by value of rid whichis the key
-
         for (
 
         Map.Entry<Integer, Integer> entry : map.entrySet()) {
@@ -360,6 +422,14 @@ public class BookingDao {
                     .println("User ID: " + entry.getKey() + " has rented: " + entry.getValue() + " times in " + year);
         }
         System.out.println("Bookings read successfully");
+
+        // give the user which have booked 2 times in the same year
+        System.out.println("\nUsers who have rented more than 2 times in " + year);
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (entry.getValue() == 2) {
+                System.out.println("User ID: " + entry.getKey() + " has rented more than 2 times in " + year);
+            }
+        }
         statement.close();
     }
 }

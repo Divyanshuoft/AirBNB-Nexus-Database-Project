@@ -42,6 +42,21 @@ public class EmployeeDao {
         }
     }
 
+    public static String getEmployeeName(int uid) throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.getUser;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        preparableStatement.setInt(1, uid);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        if (resultSet.next()) {
+            System.out.println("User name found");
+            return resultSet.getString(1);
+        } else {
+            System.out.println("User name not found");
+            return null;
+        }
+    }
+
     public static ArrayList<Employee> readEmployees() throws SQLException {
         ArrayList<Employee> employees = new ArrayList<Employee>();
         Connection conn = DB.connect();

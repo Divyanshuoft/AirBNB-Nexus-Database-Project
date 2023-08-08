@@ -68,8 +68,7 @@ public class ListingDao {
     };
 
     public static double givePriceCity(String city) throws SQLException {
-        // how can I print this static String getAvgPriceforcity = "SELECT AVG(price)
-        // FROM listing WHERE city = ?";
+
         Connection conn = DB.connect();
         String query = Query.getAvgPriceforcity;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
@@ -83,8 +82,7 @@ public class ListingDao {
     }
 
     public static double giveAvgListingPrice() throws SQLException {
-        // how can I print this static String getAvgPriceforcity = "SELECT AVG(price)
-        // FROM listing WHERE city = ?";
+
         Connection conn = DB.connect();
         String query = Query.getAvgPriceforcity2;
         Statement statement = conn.createStatement();
@@ -111,7 +109,6 @@ public class ListingDao {
         return avgPrice;
     }
 
-    // make an array ofhte wor;d's biggest cities, add about 50 to the array
     public static void createListing(Listing listing) throws SQLException {
         Connection conn = DB.connect();
         String query = Query.listinginsert;
@@ -126,14 +123,10 @@ public class ListingDao {
         preparableStatement.setString(8, listing.getPostal());
         preparableStatement.setString(9, listing.getCity());
         preparableStatement.setString(10, listing.getCountry());
-        System.out.println("Listing created successfully");
         preparableStatement.execute();
         preparableStatement.close();
     }
 
-    // give function for this static String bookingcalenderjoin = "SELECT * FROM
-    // booking INNER JOIN calendar ON booking.start = calendar.start AND booking.end
-    // = calendar.end AND booking.lid = calendar.lid";
     // public static void JoinBookingCalender() throws SQLException {
     // Connection conn = DB.connect();
     // String query = Query.joinBookingCalenderListing;
@@ -152,7 +145,30 @@ public class ListingDao {
     // }
     // System.out.println("Booking and Calender joined successfully");
     // statement.close();
-    // }
+
+    public static double getPrice(int lid) throws SQLException {
+        Connection conn = DB.connect();
+        PreparedStatement preparedStatement = conn.prepareStatement(Query.getPrice);
+        preparedStatement.setInt(1, lid);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        double price = 0;
+        while (resultSet.next()) {
+            price = resultSet.getDouble("price");
+        }
+        return price;
+    }
+
+    public static double getPriceforaid(int aid) throws SQLException {
+        Connection conn = DB.connect();
+        PreparedStatement preparedStatement = conn.prepareStatement(Query.listingamentitiesreadforaid);
+        preparedStatement.setInt(1, aid);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        double price = 0;
+        while (resultSet.next()) {
+            price = resultSet.getDouble("price");
+        }
+        return price;
+    }
 
     public static ArrayList<Listing> readListing() throws SQLException {
         ArrayList<Listing> listings = new ArrayList<Listing>();
@@ -166,7 +182,6 @@ public class ListingDao {
                     resultSet.getString(8), resultSet.getString(9), resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         statement.close();
         return listings;
     }
@@ -178,14 +193,13 @@ public class ListingDao {
         preparableStatement.setInt(1, hid);
         preparableStatement.setDouble(2, price);
         preparableStatement.setInt(3, lid);
-        System.out.println("Listing updated successfully");
         preparableStatement.executeUpdate();
         preparableStatement.close();
     }
 
     public static ArrayList<Listing> readListingPostal(String postal) throws SQLException {
         Connection conn = DB.connect();
-        String query = Query.listingreadpostalcode;
+        String query = Query.listingreadcountrycitypostal5;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
         preparableStatement.setString(1, postal.substring(0, 3) + "%");
         ResultSet resultSet = preparableStatement.executeQuery();
@@ -196,7 +210,6 @@ public class ListingDao {
                     resultSet.getString(8), resultSet.getString(9), resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
@@ -206,7 +219,6 @@ public class ListingDao {
         String query = Query.listingdelete;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
         preparableStatement.setInt(1, id);
-        System.out.println("Listing deleted successfully");
         preparableStatement.executeUpdate();
         preparableStatement.close();
     }
@@ -224,13 +236,11 @@ public class ListingDao {
                     resultSet.getString(8), resultSet.getString(9), resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
 
     public static double getPricing(int lid) throws SQLException {
-        // give the pricing for the lid
         Connection conn = DB.connect();
         String query = Query.listingreadprice;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
@@ -250,9 +260,6 @@ public class ListingDao {
         String query = Query.listingreadnearby;
         ArrayList<Listing> listings = new ArrayList<Listing>();
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadnearby = "SELECT * FROM listing WHERE (latitude - ?)
-        // * (latitude - ?) + (longitude - ?) * (longitude - ?) <= ? * ? ORDER BY
-        // (latitude - ?) * (latitude - ?) + (longitude - ?) * (longitude - ?) ASC";
 
         preparableStatement.setDouble(1, latitude);
         preparableStatement.setDouble(2, latitude);
@@ -272,7 +279,6 @@ public class ListingDao {
                     resultSet.getString(8), resultSet.getString(9), resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
@@ -289,7 +295,6 @@ public class ListingDao {
                     resultSet.getString(8), resultSet.getString(9), resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
@@ -299,9 +304,6 @@ public class ListingDao {
         String query = Query.listingreadpostal;
         ArrayList<Listing> listings = new ArrayList<Listing>();
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadpostal = "SELECT * FROM listing WHERE postal LIKE
-        // CONCAT(SUBSTRING(?, 1, CHAR_LENGTH(?) - 1), '_', SUBSTRING(?, -1)) ORDER BY
-        // ABS(postal - ?) LIMIT 5";
         preparableStatement.setString(1, postal_code);
         preparableStatement.setString(2, postal_code);
         preparableStatement.setString(3, postal_code);
@@ -323,7 +325,6 @@ public class ListingDao {
         String query = Query.listingreadaddress;
         ArrayList<Listing> listings = new ArrayList<Listing>();
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadaddress = "SELECT * FROM listing WHERE address = ?";
         preparableStatement.setString(1, address);
         ResultSet resultSet = preparableStatement.executeQuery();
         while (resultSet.next()) {
@@ -333,7 +334,6 @@ public class ListingDao {
                     resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
@@ -350,19 +350,15 @@ public class ListingDao {
                     resultSet.getString(8), resultSet.getString(9), resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
 
-    // static String listingreadcountry = "SELECT country, COUNT(*) FROM listing
-    // GROUP BY country";
     public static ArrayList<Listing> countrysearch(String country) throws SQLException {
         Connection conn = DB.connect();
         String query = Query.listingreadcountry;
         ArrayList<Listing> listings = new ArrayList<Listing>();
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadcountry = "SELECT * FROM listing WHERE country = ?";
         preparableStatement.setString(1, country);
         ResultSet resultSet = preparableStatement.executeQuery();
         while (resultSet.next()) {
@@ -372,20 +368,16 @@ public class ListingDao {
                     resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
 
-    // static String listingreadcountrycity = "SELECT country, city, COUNT(*) FROM
-    // listing GROUP BY country, city";
     public static ArrayList<Listing> countrycitysearch(String country, String city) throws SQLException {
         Connection conn = DB.connect();
         String query = Query.listingreadcountrycity;
         ArrayList<Listing> listings = new ArrayList<Listing>();
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadcountrycity = "SELECT * FROM listing WHERE country =
-        // ? AND city = ?";
+
         preparableStatement.setString(1, country);
         preparableStatement.setString(2, city);
         ResultSet resultSet = preparableStatement.executeQuery();
@@ -396,21 +388,16 @@ public class ListingDao {
                     resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
 
-    // static String listingreadcountrycitypostal = "SELECT country, city, postal,
-    // COUNT(*) FROM listing GROUP BY country, city, postal";
     public static ArrayList<Listing> countrycitypostalsearch(String country, String city, String postal)
             throws SQLException {
         Connection conn = DB.connect();
         String query = Query.listingreadcountrycitypostal;
         ArrayList<Listing> listings = new ArrayList<Listing>();
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadcountrycitypostal = "SELECT * FROM listing WHERE
-        // country = ? AND city = ? AND postal = ?";
         preparableStatement.setString(1, country);
         preparableStatement.setString(2, city);
         preparableStatement.setString(3, postal);
@@ -422,7 +409,6 @@ public class ListingDao {
                     resultSet.getString(10));
             listings.add(listing);
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
@@ -436,8 +422,6 @@ public class ListingDao {
         ArrayList<Listing> listings = new ArrayList<Listing>();
         PreparedStatement preparableStatement = conn.prepareStatement(query);
         ArrayList<ListingAmentities> listings2 = new ArrayList<ListingAmentities>();
-        // static String listingreadcountrycitypostal = "SELECT * FROM listing WHERE
-        // country = ? AND city = ? AND postal = ?";
         preparableStatement.setString(1, country);
         preparableStatement.setString(2, city);
         String x = postal.substring(0, 3) + "%";
@@ -454,7 +438,6 @@ public class ListingDao {
             for (ListingAmentities listingAmentities : listings2) {
                 listingk.add(listingAmentities.getAid());
             }
-            // check if the all the elements of amm are in listingk
 
             listings1 = CalenderDao.checkIfBookingAvailabCalender(start, end, listing_id);
             double price = listing.getPrice();
@@ -463,13 +446,11 @@ public class ListingDao {
             for (Calender calender : listings1) {
                 int lid5 = calender.getLid();
                 if (lid5 == listing_id && price >= min && price <= max && host_id != h && listingk.containsAll(amm)) {
-                    // check for already existing listing
                     if (!listings.contains(listing)) {
                         listings.add(listing);
                     }
                 }
             }
-            // add the listing which are in listing but not in calender to listings
             for (Listing listing2 : pp) {
                 if (listing2.getPrice() >= min && listing2.getPrice() <= max && host_id != h
                         && listingk.containsAll(amm)) {
@@ -479,20 +460,42 @@ public class ListingDao {
                 }
             }
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
         return listings;
     }
 
-    // give function for this static String listingreadnotincalender = "SELECT *
-    // FROM listing WHERE lid NOT IN (SELECT lid FROM calendar)";
+    public static ArrayList<String> citysearch() throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.listingreadaddress5;
+        ArrayList<String> listings = new ArrayList<String>();
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        // static String listingreadaddress5 = "SELECT DISTINCT city FROM listing";
+        ResultSet resultSet = preparableStatement.executeQuery();
+        while (resultSet.next()) {
+            listings.add(resultSet.getString(1));
+        }
+        preparableStatement.close();
+        return listings;
+    }
+
+    public static ArrayList<String> citysearch2() throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.listingreadaddress6;
+        ArrayList<String> listings = new ArrayList<String>();
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        ResultSet resultSet = preparableStatement.executeQuery();
+        while (resultSet.next()) {
+            listings.add(resultSet.getString(1));
+        }
+        preparableStatement.close();
+        return listings;
+    }
+
     public static ArrayList<Listing> ListingNotinCalender() throws SQLException {
         Connection conn = DB.connect();
         String query = Query.listingreadnotincalender;
         ArrayList<Listing> listings = new ArrayList<Listing>();
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadnotincalender = "SELECT * FROM listing WHERE lid
-        // NOT IN (SELECT lid FROM calendar)";
         ResultSet resultSet = preparableStatement.executeQuery();
         while (resultSet.next()) {
             Listing listing = new Listing(resultSet.getInt(1), resultSet.getInt(2), resultSet.getString(3),
@@ -509,29 +512,39 @@ public class ListingDao {
         Connection conn = DB.connect();
         String query = Query.listingreadcountryhost;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadcountrycount = "SELECT host_id, COUNT(*) FROM
-        // listing WHERE country = ? GROUP BY host_id ORDER BY COUNT(*) DESC";
         preparableStatement.setString(1, country);
         ResultSet resultSet = preparableStatement.executeQuery();
         while (resultSet.next()) {
-            System.out.println("Host ID: " + resultSet.getInt(1) + " Number of listings: " + resultSet.getInt(2));
+            System.out.print("Host ID: " + resultSet.getInt(1) + " Number of listings: " + resultSet.getInt(2));
+            break;
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
+    }
+
+    public static ArrayList<String> ListingHostCountryRanking2() throws SQLException {
+        Connection conn = DB.connect();
+        String query = Query.listingreadforhost2;
+        PreparedStatement preparableStatement = conn.prepareStatement(query);
+        ArrayList<String> listings = new ArrayList<String>();
+        ResultSet resultSet = preparableStatement.executeQuery();
+        while (resultSet.next()) {
+            listings.add(resultSet.getString(1) + " " + resultSet.getString(2));
+        }
+        preparableStatement.close();
+        return listings;
     }
 
     public static void ListingHostCityRanking(String city) throws SQLException {
         Connection conn = DB.connect();
         String query = Query.listingreadcityhost;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadcitycount = "SELECT host_id, COUNT(*) FROM listing
-        // WHERE city = ? GROUP BY host_id ORDER BY COUNT(*) DESC";
+        ArrayList<String> listings = new ArrayList<String>();
         preparableStatement.setString(1, city);
         ResultSet resultSet = preparableStatement.executeQuery();
         while (resultSet.next()) {
-            System.out.println("Host ID: " + resultSet.getInt(1) + " Number of listings: " + resultSet.getInt(2));
+            System.out.print("Host ID: " + resultSet.getInt(1) + " Number of listings: " + resultSet.getInt(2));
+            break;
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
     }
 
@@ -548,10 +561,7 @@ public class ListingDao {
         Connection conn = DB.connect();
         String query = Query.listingreadcityhost;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadcitycount = "SELECT host_id, COUNT(*) FROM listing
-        // WHERE city = ? GROUP BY host_id ORDER BY COUNT(*) DESC";
-        System.out.println("Total number of listings in " + city + ", " + country + ": " + total);
-        System.out.println("Hosts with more than 10% of listings in " + city + ", " + country + ":");
+        System.out.println("\nHosts with more than 10% of listings in " + city + ", " + country + ":");
         preparableStatement.setString(1, city);
         ResultSet resultSet = preparableStatement.executeQuery();
         while (resultSet.next()) {
@@ -559,19 +569,14 @@ public class ListingDao {
                 System.out.println("Host ID: " + resultSet.getInt(1) + " Number of listings: " + resultSet.getInt(2));
             }
         }
-        System.out.println("Listings read successfully");
         preparableStatement.close();
 
     }
 
-    // give funsiton for this static String listingreadtotal = "SELECT COUNT(*) FROM
-    // listing WHERE city = ? AND country = ?";
     public static int TotalListings(String city, String country) throws SQLException {
         Connection conn = DB.connect();
         String query = Query.listingreadtotal;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listingreadtotal = "SELECT COUNT(*) FROM listing WHERE city =
-        // ? AND country = ?";
         preparableStatement.setString(1, city);
         preparableStatement.setString(2, country);
         ResultSet resultSet = preparableStatement.executeQuery();
@@ -587,7 +592,6 @@ public class ListingDao {
         Connection conn = DB.connect();
         String query = Query.listinggetuser;
         PreparedStatement preparableStatement = conn.prepareStatement(query);
-        // static String listinggetuser = "SELECT uid FROM listing WHERE lid = ?";
         preparableStatement.setInt(1, lid);
         ResultSet resultSet = preparableStatement.executeQuery();
         int uid = 0;

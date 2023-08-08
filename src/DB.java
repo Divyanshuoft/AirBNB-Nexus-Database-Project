@@ -6,7 +6,7 @@ public class DB {
 
     public static Connection connect() {
         try {
-            String url = "jdbc:mysql://localhost:3306/test";
+            String url = "jdbc:mysql://localhost:3306/sampletest";
             String username = "root";
             String password = "Canada@2021";
             conn = DriverManager.getConnection(url, username, password);

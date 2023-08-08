@@ -10,7 +10,9 @@ public class Query {
     static String usersupdate = "UPDATE users SET name = ?, address = ?, dob = ?, occupation = ?, sin = ?, payment_info = ? WHERE uid = ?";
     static String usersdelete = "DELETE FROM users WHERE uid = ?";
     static String userslogin = "SELECT * FROM users WHERE uid = ? AND name = ?";
-
+    static String getUser = "SELECT name FROM users WHERE uid = ?";
+    // get price of the listing for lid
+    static String getPrice = "SELECT price FROM listing WHERE lid = ?";
     // lisitng queries
     // insert, read, update, delete, readforhost, readprice, getuser, readforuser,
     // readforuser2, readpostalcode
@@ -24,7 +26,7 @@ public class Query {
     static String listingreadforuser = "SELECT * FROM listing l JOIN booking b ON l.lid = b.lid";
     static String listingreadforuser2 = "SELECT l.lid, l.hid, l.type, l.price, l.latitude, l.longitude, l.address, l.postal, l.city, l.country FROM listing l JOIN booking b ON l.lid = b.lid WHERE b.rid = ? AND b.start <= ? AND b.end >= ? AND b.is_cancelled = false";
     static String listingreadpostalcode = "SELECT * FROM listing WHERE postal = ?";
-
+    static String listingreadforhost2 = "SELECT DISTINCT city, country FROM listing";
     // Average price queries
     // getAvgPriceforcity, getAvgPriceforcity2, getAvgPriceforCityTypePostal
     static String getAvgPriceforcity = "SELECT AVG(price) FROM listing WHERE city = ?";
@@ -43,6 +45,7 @@ public class Query {
     static String bookingreadforlisting2 = "SELECT * FROM booking WHERE bid = ? AND rid = ?";
     static String bookingreadforlisting3 = "SELECT * FROM booking WHERE lid = ? AND rid = ?";
     static String bookingcancel = "UPDATE booking SET is_cancelled = true WHERE bid = ?";
+    static String bookingcancel12 = "SELECT lid FROM listing";
 
     // read for listing
     static String bookingread34 = "SELECT DISTINCT * FROM booking b JOIN listing l ON b.lid = l.lid";
@@ -53,12 +56,9 @@ public class Query {
 
     static String amenitiesinsert = "INSERT INTO amenities (aid, name, price) VALUES (?, ?, ?)";
     static String amenitiesread = "SELECT * FROM amenities";
-    // give the query to find the averager rpice of the amenities
     static String findAvgAmmenityPrice = "SELECT AVG(price) FROM amenities";
     static String amenitiesupdate = "UPDATE amenities SET name = ?, price = ? WHERE aid = ?";
     static String amenitiesdelete = "DELETE FROM amenities WHERE aid = ?";
-    // give the ranking to the amenties on the absis of how many times it has been
-    // used and price use calculations for it
 
     // listing amenities queries
     // insert, read, update, delete, readforlid, readforaid
@@ -67,6 +67,7 @@ public class Query {
     static String listingamentitiesupdate = "UPDATE listing_amenities SET aid = ? WHERE lid = ?";
     static String listingamentitiesdelete = "DELETE FROM listing_amenities WHERE lid = ? AND aid = ?";
     static String listingamentitiesreadforlid = "SELECT * FROM listing_amenities WHERE lid = ?";
+    static String listingamentitiesreadforaid = "SELECT price FROM amenities WHERE aid = ?";
 
     // query with amenities and give the query for the same
     static String listingamentitiesreadforlid2 = "SELECT * FROM amenities JOIN listing_amenities ON listing_amenities.aid = amenities.aid WHERE listing_amenities.lid = ?";
@@ -106,11 +107,14 @@ public class Query {
     static String listingreadpricewise = "SELECT * FROM listing ORDER BY price ASC";
     static String listingPriceHighttoLow = "SELECT * FROM listing ORDER BY price DESC";
     static String listingreadaddress = "SELECT * FROM listing WHERE address = ?";
+    static String listingreadaddress5 = "SELECT DISTINCT city FROM listing";
+    static String listingreadaddress6 = "SELECT DISTINCT country FROM listing";
     static String listingreadpostal = "SELECT * FROM listing WHERE postal LIKE CONCAT(SUBSTRING(?, 1, CHAR_LENGTH(?) - 1), '_', SUBSTRING(?, -1)) ORDER BY ABS(postal - ?) LIMIT 5";
 
     // search queries which the user searches for
     // search by country, city, postal, country and city, country and city and
     // postal, country and host, city and host, total
+    static String listingreadcountrycitypostal5 = "SELECT * FROM listing WHERE postal LIKE ?";
     static String listingreadcountry = "SELECT * FROM listing WHERE country = ?";
     static String listingreadcountrycity = "SELECT * FROM listing WHERE country = ? AND city = ?";
     static String listingreadcountrycitypostal = "SELECT * FROM listing WHERE country = ? AND city = ? AND postal = ?";

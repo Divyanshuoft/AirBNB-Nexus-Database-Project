@@ -80,9 +80,7 @@ public class CalenderDao {
             if (!isBetween) {
                 calenders.add(calender);
             }
-            System.out.println("Booking unavailable");
         }
-        System.out.println("Calenders read successfully");
         preparableStatement.close();
         return calenders;
     }

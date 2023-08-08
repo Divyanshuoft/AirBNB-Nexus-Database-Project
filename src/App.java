@@ -1,9 +1,5 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
-
-import javax.swing.text.StyledEditorKit;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -11,14 +7,9 @@ public class App {
     public static int exit_program = 0;
     public static int uid = 0;
     static LocalDate currentDate = LocalDate.now();
-
-    // Define the date format
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    // Format the current date as per the defined format
     static String present_day = currentDate.format(formatter);
 
-    // Print the present date
     public static void main(String[] args) throws Exception {
         while (exit_program == 0) {
             int logged_in = 0;
@@ -36,7 +27,6 @@ public class App {
             if (choice == 3) {
                 System.out.println("Goodbye!");
                 exit_program = 1;
-                // write code to exit the program on terminal
                 break;
             } else if (choice == 2) {
                 System.out.println("\n********************************************");
@@ -44,13 +34,14 @@ public class App {
                 System.out.println("Please enter your username: ");
                 scanner.nextLine();
                 String name = scanner.nextLine();
-                int id = name.hashCode();
-                System.out.println("Your user id is: " + id + "\nPlease remember it for future use");
+                System.out.println("Please enter your password: [ONLY INTEGER PASSWORDS ARE ALLOWED]");
+                int password = scanner.nextInt();
+                scanner.nextLine();
+                int id = password;
                 System.out.println("Please enter your address: ");
                 String address = scanner.nextLine();
                 System.out.println("Please enter your date of birth in the format yyyy-mm-dd: ");
                 String dob = scanner.nextLine();
-                // get the age from the dob
                 int age = 0;
                 String[] dob_split = dob.split("-");
                 int year = Integer.parseInt(dob_split[0]);
@@ -89,7 +80,7 @@ public class App {
                 System.out.println("\n********************************************");
 
                 System.out.println("\nPlease enter your credentials to login");
-                System.out.println("Enter your uid (id) which you received while registering");
+                System.out.println("Enter your UID/Password");
                 uid = scanner.nextInt();
                 scanner.nextLine();
                 System.out.println("Enter your username (name) which you received while registering");
@@ -103,16 +94,221 @@ public class App {
                     logged_in = 0;
                 }
                 while (logged_in == 0) {
+
                     System.out.println("\n********************************************");
                     System.out.println("\nWelcome " + username + "!");
                     System.out.println("\nToday date is " + present_day);
                     System.out.println("\nPlease choose an option:");
                     System.out.println(
-                            "2. Read User\n3. Search Listing\n5. Your Listings\n6. Book a new Listing\n7. View your Bookings\n8. View Amentities for hosts\n10. View reviews\n9. Logout\n11. Delete your account\n");
+                            "1. Get User from UID\n2. Get All user list\n3. Search Listing\n4. View Reports\n5. Your Listings\n6. Book a new Listing\n7. View your Bookings\n8. View Amentities for hosts\n10. View reviews\n9. Logout\n11. Delete your account\n");
                     System.out.print("Enter your choice: ");
                     scanner = new Scanner(System.in);
                     choice = scanner.nextInt();
                     switch (choice) {
+                        case 1:
+                            System.out.println("\n********************************************");
+                            System.out.println("You are on the Get User from UID page\n");
+                            System.out.println("Please enter the UID of the user you want to search: ");
+                            int uid21 = scanner.nextInt();
+                            scanner.nextLine();
+                            String flag = EmployeeDao.getEmployeeName(uid21);
+                            System.out.println("The user with UID " + uid21 + " is " + flag);
+                            break;
+                        case 2:
+                            ArrayList<Employee> employees = EmployeeDao.readEmployees();
+                            for (Employee employee : employees) {
+                                System.out.println(employee);
+                            }
+                            break;
+                        case 4:
+                            int kp = 0;
+                            while (kp == 0) {
+                                System.out.println("\n********************************************");
+                                System.out.println("You are on the View Reports page\n");
+                                System.out.println("Please choose an option:");
+                                System.out.println(
+                                        "1. Ranking of renters in a specific date range by city in specific time");
+                                System.out.println("2. Total number of bookings in a specific date range by city");
+                                System.out
+                                        .println("3. Total number of bookings in a city by postal code");
+                                // System.out.println("3. total number of listings per country and city and
+                                // postal code");
+                                System.out.println(
+                                        "4. Hosts which have more than 10% of the number of listings in the city and country");
+                                System.out.println("5. Total number of bookings in a specific date range by city");
+                                System.out.println("6. Most cancellations by an host or a renter");
+                                System.out.println("7. Hosts which have the most booking in the country");
+                                System.out.println("8. Hosts which have the most booking in the city");
+                                System.out.println("9. total number of listings per country");
+                                System.out.println("10. total number of listings per country and city");
+                                System.out
+                                        .println("11. total number of listings per country and city and postal code");
+                                System.out
+                                        .println("12. Word cloud for each listing");
+                                System.out
+                                        .println("13 Go Back to Dashboard\n");
+                                System.out.print("Enter your choice: ");
+                                int choice2 = scanner.nextInt();
+                                scanner.nextLine();
+                                switch (choice2) {
+                                    case 5:
+                                        System.out.println("Enter year");
+                                        int year = scanner.nextInt();
+                                        scanner.nextLine();
+                                        BookingDao.asdasd12(year);
+                                        break;
+                                    case 13:
+                                        kp = 1;
+                                        break;
+                                    case 12:
+                                        ArrayList<Integer> listingsp = new ArrayList<Integer>();
+                                        listingsp = BookingDao.getListingIds();
+                                        for (Integer listing : listingsp) {
+                                            ListRatingDao.CombinedBodyForListing(listing);
+                                        }
+                                        break;
+                                    case 1:
+                                        System.out.println("Enter start date");
+                                        String start_date = scanner.nextLine();
+                                        System.out.println("Enter end date");
+                                        String end_date = scanner.nextLine();
+                                        System.out.println(
+                                                "Ranking of renters in a specific date range by city in specific time\n");
+                                        ArrayList<String> listings = new ArrayList<String>();
+                                        listings = ListingDao.citysearch();
+                                        for (String listing : listings) {
+                                            BookingDao.asdasd(start_date, end_date, listing);
+                                        }
+
+                                        System.out.println(
+                                                "\nRanking of renters in a specific date range in specific time\n");
+                                        BookingDao.asdasd2(start_date, end_date);
+                                        break;
+                                    // case 2:
+                                    // System.out.println("Enter postal code");
+                                    // String postal_code = scanner.nextLine();
+                                    // ArrayList<Listing> xasd = ListingDao.readListingPostal(postal_code);
+                                    // for (Listing l : xasd) {
+                                    // System.out.println(l);
+                                    // }
+                                    // break;
+                                    case 4:
+                                        System.out.println("Top 10% of hosts");
+                                        listings = new ArrayList<String>();
+                                        listings = ListingDao.ListingHostCountryRanking2();
+                                        for (String listing : listings) {
+                                            String[] ccc = listing.split(" ");
+                                            String city = ccc[0];
+                                            String country = ccc[1];
+                                            ListingDao.TenPercentListing(city, country);
+                                        }
+                                        // System.out.println("Enter city");
+                                        // String city3 = scanner.nextLine();
+                                        // System.out.println("Enter country");
+                                        // String country = scanner.nextLine();
+                                        // ListingDao.TenPercentListing(city3, country);
+                                        break;
+                                    case 6:
+                                        BookingDao.mostcancellation();
+                                        BookingDao.mostcancellationrid();
+                                        break;
+                                    case 7:
+                                        listings = ListingDao.citysearch2();
+                                        System.out.println("\n********************************************\n");
+                                        System.out.println("Ranking of host by country");
+                                        for (String listing : listings) {
+                                            ListingDao.ListingHostCountryRanking(listing);
+                                            System.out.print(" in " + listing + "\n");
+                                        }
+                                        break;
+                                    case 8:
+                                        listings = ListingDao.citysearch();
+                                        System.out.println("\n********************************************\n");
+                                        System.out.println("Ranking of host by city");
+                                        for (String listing : listings) {
+                                            ListingDao.ListingHostCityRanking(listing);
+                                            System.out.print(" in " + listing + "\n");
+                                        }
+                                        break;
+
+                                    case 9:
+                                        listings = ListingDao.citysearch2();
+                                        int count = 0;
+                                        System.out.println("\n********************************************\n");
+                                        System.out.println("Total number of listings per country\n");
+                                        for (String l2 : listings) {
+                                            ArrayList<Listing> listingsc = ListingDao.countrysearch(l2);
+                                            System.out.println("Here are the listings in " + l2);
+                                            count = 0;
+                                            for (Listing l : listingsc) {
+                                                System.out.println(l);
+                                                count++;
+                                            }
+                                            System.out.println("Total listings: " + count + "\n");
+                                        }
+                                        break;
+                                    case 10:
+                                        System.out.println("Enter city and country");
+                                        String city31 = scanner.nextLine();
+                                        String country1 = scanner.nextLine();
+                                        count = 0;
+                                        System.out.println("Here are the listings in " + city31 + ", " + country1);
+                                        ArrayList<Listing> listingscc = ListingDao.countrycitysearch(country1, city31);
+                                        for (Listing l : listingscc) {
+                                            System.out.println(l);
+                                            count++;
+
+                                        }
+                                        System.out.println("Total listings: " + count);
+
+                                        break;
+
+                                    case 11:
+                                        System.out.println("Enter city, postal code and country");
+                                        String city1 = scanner.nextLine();
+                                        String postal_code2 = scanner.nextLine();
+                                        String country2 = scanner.nextLine();
+                                        count = 0;
+                                        System.out.println("Here are the listings in " + city1 + ", " + postal_code2
+                                                + ", " + country2);
+                                        ArrayList<Listing> listingscpc = ListingDao.countrycitypostalsearch(
+                                                country2, city1, postal_code2);
+                                        for (Listing l : listingscpc) {
+                                            System.out.println(l);
+                                            count++;
+
+                                        }
+                                        System.out.println("Total listings: " + count);
+
+                                        break;
+                                    case 3:
+                                        System.out.println("Enter city");
+                                        String city = scanner.nextLine();
+                                        System.out.println("Enter Zipcode");
+                                        String zipcode = scanner.nextLine();
+                                        BookingDao.totalBookingForCityZip(zipcode, city);
+                                        break;
+                                    case 2:
+                                        System.out.println("Enter city");
+                                        String city13 = scanner.nextLine();
+                                        System.out.println("Enter start date");
+                                        String start_date13 = scanner.nextLine();
+                                        System.out.println("Enter end date");
+                                        String end_date13 = scanner.nextLine();
+                                        BookingDao.totalBookingForCity(start_date13, end_date13, city13);
+                                        break;
+                                    // System.out.println("Here are the reviews for the listing");
+                                    // ArrayList<ListingRating> reviesws = ListRatingDao
+                                    // .readListRatingforListing(lid2);
+                                    // for (ListingRating l : reviews) {
+                                    // System.out.println(l);
+                                    // }
+
+                                    // System.out.println("These are the top 5 word clouds for this listing");
+                                    // ListRatingDao.CombinedBodyForListing(lid2);
+                                }
+                            }
+                            break;
                         case 11:
                             System.out.println("Delete your account");
                             System.out.println("Are you sure you want to delete your account? (y/n)");
@@ -130,32 +326,161 @@ public class App {
                                 break;
                             }
 
-                        case 2:
-                            System.out.println("Read User");
-                            ArrayList<Employee> employees = EmployeeDao.readEmployees();
-                            for (Employee e : employees) {
-                                System.out.println(e);
-                            }
-                            break;
+                            // case 2:
+                            // System.out.println("Read User");
+                            // ArrayList<Employee> employees = EmployeeDao.readEmployees();
+                            // for (Employee e : employees) {
+                            // System.out.println(e);
+                            // }
+                            // break;
                         case 3:
+                            System.out.println("\n********************************************\n");
+
                             System.out.println("Search Listing");
                             int search_id = 0;
                             while (search_id == 0) {
-                                System.out.println("Enter your choice:");
                                 System.out.println(
-                                        "1. Total booking for a city with a zipcode 2. Search listing with date range and location");
+                                        "1. Search with master filters\n2. Filter with lattitudes and longitudes\n3. Filer price low to high\n4. Filter price high to low\n5. Filter by Postal\n6. Find Address\n7. Book the listing\n8. So to Database Menu ");
+                                System.out.print("\nEnter your choice: ");
                                 int search = scanner.nextInt();
                                 scanner.nextLine();
                                 switch (search) {
-                                    case 1:
-                                        System.out.println("Enter city");
-                                        String city = scanner.nextLine();
-                                        System.out.println("Enter Zipcode");
-                                        String zipcode = scanner.nextLine();
-                                        BookingDao.totalBookingForCityZip(zipcode, city);
+                                    case 8:
+                                        search_id = 1;
+                                        break;
+                                    case 7:
+                                        System.out.println("Book a listing");
+                                        System.out.println(
+                                                "Please select a listing from the above listing which you have searched with filters");
+                                        System.out.println("Please enter the lid of the listing you want to view");
+                                        int lid2 = scanner.nextInt();
+                                        int listing_entered2 = 0;
+                                        while (listing_entered2 == 0) {
+                                            System.out.println("Please enter your choice:");
+                                            System.out.println(
+                                                    "1. Book the listing 2. See Review for the Listing 3. Go back to see other Listings");
+                                            scanner = new Scanner(System.in);
+                                            int x3 = scanner.nextInt();
+                                            switch (x3) {
+                                                case 1:
+                                                    int lid = lid2;
+                                                    int bid = 100 * lid2 + 10 * uid;
+                                                    if (ListingDao.getuser(lid) == uid) {
+                                                        System.out.println("You cannot book your own listing");
+                                                        break;
+                                                    }
+                                                    scanner.nextLine();
+                                                    System.out.println(
+                                                            "Please enter the start date of your booking in the format YYYY-MM-DD");
+                                                    String start = scanner.nextLine();
+                                                    System.out.println(
+                                                            "Please enter the end date of your booking in the format YYYY-MM-DD");
+                                                    String end = scanner.nextLine();
+                                                    ArrayList<Calender> calender = CalenderDao.readCalenderForLid(lid);
+                                                    int counter = 0;
+                                                    for (Calender c : calender) {
+                                                        if (c.getLid() == lid) {
+
+                                                            String start2 = c.getStart();
+                                                            String end2 = c.getEnd();
+
+                                                            String[] start_date = start.split("-");
+                                                            String[] end_date = end.split("-");
+                                                            String[] start_date2 = start2.split("-");
+                                                            String[] end_date2 = end2.split("-");
+
+                                                            String present_date = present_day;
+
+                                                            // Parse the start and end dates from strings to LocalDate
+                                                            // objects
+                                                            LocalDate startDate = LocalDate.parse(start);
+                                                            LocalDate endDate = LocalDate.parse(end);
+
+                                                            LocalDate startDate2 = LocalDate.parse(start2);
+                                                            LocalDate endDate2 = LocalDate.parse(end2);
+
+                                                            // Check if the the user selected date is between the start
+                                                            // and end
+                                                            // dates
+                                                            boolean isBetween = startDate.isAfter(startDate2)
+                                                                    || endDate.isBefore(endDate2);
+
+                                                            // Print "yes" if present day is between start and end,
+                                                            // otherwise print
+                                                            // "no"
+                                                            if (isBetween) {
+                                                                counter++;
+                                                            }
+                                                        }
+                                                    }
+                                                    if (counter != 0) {
+                                                        System.out
+                                                                .println("You cannot book the listing as it is booked");
+                                                        break;
+                                                    }
+                                                    System.out
+                                                            .println("You can book the listing as it's not yet booked");
+                                                    System.out
+                                                            .println(
+                                                                    "Please enter how would you like to pay? [VISA/Mastercard]");
+                                                    String ccInfo = scanner.nextLine();
+                                                    String book_date = present_day;
+                                                    double cost = ListingDao.getPricing(lid);
+                                                    System.out.println("How many guests are you booking for?");
+                                                    int guests = scanner.nextInt();
+                                                    scanner.nextLine();
+                                                    cost = cost * guests;
+                                                    System.out.println("The cost of your booking is: " + cost);
+                                                    System.out.println(
+                                                            "Please enter the cid of the listing you want to book");
+                                                    int cidbooking = scanner.nextInt();
+                                                    scanner.nextLine();
+                                                    System.out.println(
+                                                            "Please enter 1 to confirm your booking or 0 to cancel");
+                                                    // please print the year, month and days for this start
+                                                    // and end date
+                                                    String[] dateParts = start.split("-");
+                                                    System.out.println("Year: " + dateParts[0]);
+                                                    System.out.println("Month: " + dateParts[1]);
+                                                    System.out.println("Day: " + dateParts[2]);
+                                                    int confirm = scanner.nextInt();
+                                                    if (confirm == 1) {
+                                                        Booking booking = new Booking(bid, lid, uid, book_date, start,
+                                                                end, cost,
+                                                                ccInfo,
+                                                                false);
+                                                        BookingDao.createBooking(booking);
+                                                        CalenderDao.createCalender(cidbooking, start, end, lid);
+                                                        System.out.println("Your booking has been confirmed");
+                                                    } else {
+                                                        System.out.println("Your booking has been cancelled");
+
+                                                    }
+                                                    break;
+                                                case 2:
+                                                    System.out.println("Here are the reviews for the listing");
+                                                    ArrayList<ListingRating> reviews = ListRatingDao
+                                                            .readListRatingforListing(lid2);
+                                                    for (ListingRating l : reviews) {
+                                                        System.out.println(l);
+                                                    }
+
+                                                    System.out.println(
+                                                            "These are the top 5 word clouds for this listing");
+                                                    ListRatingDao.CombinedBodyForListing(lid2);
+                                                    break;
+
+                                                case 3:
+                                                    listing_entered2 = 1;
+                                                    System.out.println(
+                                                            "Please select a listing from the following listings");
+                                                    break;
+                                            }
+                                        }
+
                                         break;
 
-                                    case 2:
+                                    case 1:
 
                                         System.out.println("Enter start date");
                                         String start_date = scanner.nextLine();
@@ -187,7 +512,48 @@ public class App {
                                             System.out.println(l);
                                         }
                                         break;
-
+                                    case 2:
+                                        System.out.println("Enter latitude and longitude");
+                                        double latitude2 = scanner.nextDouble();
+                                        double longitude2 = scanner.nextDouble();
+                                        System.out.println("Enter distance");
+                                        double distance = scanner.nextDouble();
+                                        ArrayList<Listing> listingsi = ListingDao.readListings(latitude2, longitude2,
+                                                distance);
+                                        for (Listing l : listingsi) {
+                                            System.out.println(l);
+                                        }
+                                        break;
+                                    case 3:
+                                        ArrayList<Listing> listingsp = ListingDao.readListingsPriceWiseSortLowtoHigh();
+                                        System.out.println("Here are the listings sorted by price low to high");
+                                        for (Listing l : listingsp) {
+                                            System.out.println(l);
+                                        }
+                                        break;
+                                    case 5:
+                                        System.out.println("Enter postal code");
+                                        String postal_code = scanner.nextLine();
+                                        ArrayList<Listing> listingspc = ListingDao.readListingPostal(postal_code);
+                                        for (Listing l : listingspc) {
+                                            System.out.println(l);
+                                        }
+                                        break;
+                                    case 6:
+                                        System.out.println("Enter address");
+                                        String address = scanner.nextLine();
+                                        ArrayList<Listing> listingsa = ListingDao.addresssearch(address);
+                                        for (Listing l : listingsa) {
+                                            System.out.println(l);
+                                        }
+                                        break;
+                                    case 4:
+                                        ArrayList<Listing> listingsph = ListingDao.pricehigtolow();
+                                        System.out.println("Here are the listings sorted by price high to low");
+                                        for (Listing l : listingsph) {
+                                            System.out.println(l);
+                                        }
+                                        break;
                                     // case 1:
                                     // System.out.println("Enter city");
                                     // String city = scanner.nextLine();
@@ -197,12 +563,7 @@ public class App {
                                     // String end_date = scanner.nextLine();
                                     // BookingDao.totalBookingForCity(start_date, end_date, city);
                                     // break;
-                                    // case 7:
-                                    // System.out.println("Enter year");
-                                    // int year = scanner.nextInt();
-                                    // scanner.nextLine();
-                                    // BookingDao.asdasd12(year);
-                                    // break;
+
                                     // case 5:
                                     // System.out.println("Enter start date");
                                     // String start_date = scanner.nextLine();
@@ -240,30 +601,6 @@ public class App {
                                     // }
                                     // break;
 
-                                    // case 4:
-                                    // System.out.println("Enter start date");
-                                    // String start_date = scanner.nextLine();
-                                    // System.out.println("Enter end date");
-                                    // String end_date = scanner.nextLine();
-                                    // ArrayList<Calender> xasas = CalenderDao.readCalender();
-                                    // for (Calender l : xasas) {
-                                    // String s = l.getStart();
-                                    // String e = l.getEnd();
-                                    // LocalDate startDate1 = LocalDate.parse(start_date);
-                                    // LocalDate endDate1 = LocalDate.parse(end_date);
-                                    // LocalDate startDate2 = LocalDate.parse(s);
-                                    // LocalDate endDate2 = LocalDate.parse(e);
-
-                                    // // Check if (start1, end1) lies within (start2, end2)
-                                    // boolean isWithin = startDate2.isAfter(startDate1)
-                                    // && endDate2.isBefore(endDate1);
-
-                                    // // Print the result
-                                    // if (isWithin) {
-                                    // System.out.println(l);
-                                    // }
-                                    // }
-                                    // break;
                                     // case 5:
                                     // System.out.println("Enter country");
                                     // String country = scanner.nextLine();
@@ -320,51 +657,6 @@ public class App {
 
                                     // }
                                     // System.out.println("Total listings: " + count);
-
-                                    // break;
-                                    // case 1:
-                                    // System.out.println("Enter latitude and longitude");
-                                    // double latitude2 = scanner.nextDouble();
-                                    // double longitude2 = scanner.nextDouble();
-                                    // System.out.println("Enter distance");
-                                    // double distance = scanner.nextDouble();
-                                    // ArrayList<Listing> listingsi = ListingDao.readListings(latitude2, longitude2,
-                                    // distance);
-                                    // for (Listing l : listingsi) {
-                                    // System.out.println(l);
-                                    // }
-                                    // break;
-                                    // case 2:
-                                    // ArrayList<Listing> listingsp =
-                                    // ListingDao.readListingsPriceWiseSortLowtoHigh();
-                                    // System.out.println("Here are the listings sorted by price low to high");
-                                    // for (Listing l : listingsp) {
-                                    // System.out.println(l);
-                                    // }
-                                    // break;
-                                    // case 3:
-                                    // System.out.println("Enter postal code");
-                                    // String postal_code = scanner.nextLine();
-                                    // ArrayList<Listing> listingspc = ListingDao.postalcodesearch(postal_code);
-                                    // for (Listing l : listingspc) {
-                                    // System.out.println(l);
-                                    // }
-                                    // break;
-                                    // case 4:
-                                    // System.out.println("Enter address");
-                                    // String address = scanner.nextLine();
-                                    // ArrayList<Listing> listingsa = ListingDao.addresssearch(address);
-                                    // for (Listing l : listingsa) {
-                                    // System.out.println(l);
-                                    // }
-                                    // break;
-                                    // case 5:
-                                    // ArrayList<Listing> listingsph = ListingDao.pricehigtolow();
-                                    // System.out.println("Here are the listings sorted by price high to low");
-                                    // for (Listing l : listingsph) {
-                                    // System.out.println(l);
-                                    // }
-                                    // break;
                                 }
                             }
                             break;
@@ -494,6 +786,17 @@ public class App {
                                             int x3 = scanner.nextInt();
 
                                             switch (x3) {
+                                                case 2:
+                                                    System.out.println("Here are the reviews for the listing");
+                                                    ArrayList<ListingRating> reviews12 = ListRatingDao
+                                                            .readListRatingforListing(lid);
+                                                    for (ListingRating l : reviews12) {
+                                                        System.out.println(l);
+                                                    }
+
+                                                    System.out.println(
+                                                            "These are the top 5 word clouds for this listing");
+                                                    ListRatingDao.CombinedBodyForListing(lid);
                                                 case 6:
                                                     System.out.println("Here are the bookings for this listing");
                                                     ArrayList<Booking> bookings2 = BookingDao
@@ -641,9 +944,13 @@ public class App {
                                                 "Please enter the details to create a new listing");
                                         int hid = uid;
                                         System.out.println(
-                                                "Please enter the type of listing [ apartments, houses, rooms ]");
-                                        String type = scanner.nextLine();
-                                        scanner.nextLine();
+                                                "Please enter the type of listing 1. apartments 2. houses 3. rooms");
+                                        String type = "apartments";
+                                        if (scanner.nextInt() == 2) {
+                                            type = "houses";
+                                        } else if (scanner.nextInt() == 3) {
+                                            type = "rooms";
+                                        }
                                         System.out.println("Please enter the latitude [ -90, 90 ]]");
                                         double latitude = scanner.nextDouble();
                                         scanner.nextLine();
@@ -661,17 +968,41 @@ public class App {
                                         System.out.println("Please enter the country [ country ]");
                                         String country = scanner.nextLine();
                                         System.out.println("Based on our databse, we recommend the following price");
+                                        double m = 1;
+                                        System.out.println(type);
+                                        if (type.equals("apartments")) {
+                                            System.out.println(
+                                                    "As you have selected apartments, we recommend the price to be 1.5 times the average price of the city");
+                                            m = 1.5;
+                                        }
+                                        if (type.equals("houses")) {
+                                            System.out.println(
+                                                    "As you have selected houses, we recommend the price to be 2 times the average price of the city");
+                                            m = 2;
+                                        }
+                                        if (type.equals("rooms")) {
+                                            System.out.println(
+                                                    "As you have selected rooms, we recommend the price to be 1 times the average price of the city");
+                                            m = 1;
+                                        }
+                                        if (latitude > 30 && latitude < 35 && longitude > 30 && longitude < 35) {
+                                            System.out.println(
+                                                    "As you have selected a listing in the Central, we recommend the price to be 3 times the average price of the city");
+                                            m = 3;
+                                        }
                                         if (ListingDao.givePriceCityTypePostal(city, type, postal) != 0) {
                                             System.out.println("The price for the city, type and postal is: "
-                                                    + ListingDao.givePriceCityTypePostal(city, type, postal));
+                                                    + ListingDao.givePriceCityTypePostal(city, type, postal) * m);
                                         } else if (ListingDao.givePriceCity(city) != 0) {
                                             System.out.println("The price for the city is: "
-                                                    + ListingDao.givePriceCity(city));
+                                                    + ListingDao.givePriceCity(city) * m);
                                         } else {
-                                            System.out.println("The average city price in our databse is "
-                                                    + ListingDao.giveAvgListingPrice());
+                                            System.out.println("The average city price in our database is "
+                                                    + ListingDao.giveAvgListingPrice() * m);
                                         }
                                         System.out.println("Please enter the price that you want to list");
+                                        System.out.println(
+                                                "It is recommended to list the price as per the above recommendation");
                                         double price = scanner.nextDouble();
                                         scanner.nextLine();
                                         Listing listing = new Listing(lidx, hid, type, price, latitude, longitude,
@@ -684,7 +1015,9 @@ public class App {
                                         for (Listing l : listings2) {
                                             System.out.println(l);
                                         }
-                                        System.out.println("Do you want to add amenities to your listing? [ y/n ]");
+                                        System.out.println(
+                                                "If you add ammenities, the price will be added to the listing price, so you will make more profit");
+                                        System.out.println("Do you want to add amenities to your listing? [ y/n ]\n");
                                         ListingAmentitiesDao.findAvgAmmenityPrice();
 
                                         String amenity = scanner.nextLine();
@@ -732,6 +1065,12 @@ public class App {
                                                                             "View updated Amentities for your Listing");
                                                                     ListingAmentitiesDao
                                                                             .createListingAmentities(amenity2);
+                                                                    double pric = ListingDao.getPrice(lidx);
+                                                                    // add ammenity price
+                                                                    pric += pric + ListingDao.getPriceforaid(aid1);
+                                                                    System.out.println(
+                                                                            "You have increased the original price by "
+                                                                                    + ListingDao.getPriceforaid(aid1));
                                                                     amenities2 = ListingAmentitiesDao
                                                                             .readAmenitiesforListingforlid(lidx);
                                                                     for (ListingAmentities a : amenities2) {
@@ -783,24 +1122,13 @@ public class App {
                                         int counter = 0;
                                         for (Calender c : calender2) {
                                             if (c.getLid() == lida) {
-                                                // present date is present_date, teh start date is start adn end date is
-                                                // end in teh calendar
-                                                // if the present date is between start and end date then dont update
-                                                // give code
                                                 String start = c.getStart();
                                                 String end = c.getEnd();
-                                                // Get the current date
-                                                // Parse the start and end dates from strings to LocalDate objects
                                                 LocalDate startDate = LocalDate.parse(start);
                                                 LocalDate endDate = LocalDate.parse(end);
                                                 LocalDate presentDate2 = LocalDate.parse(datea);
-
-                                                // Check if the present day is between the start and end dates
                                                 boolean isBetween = presentDate2.isAfter(startDate)
                                                         && presentDate2.isBefore(endDate);
-
-                                                // Print "yes" if present day is between start and end, otherwise print
-                                                // "no"
                                                 if (isBetween) {
                                                     counter = 1;
                                                 }
@@ -826,35 +1154,23 @@ public class App {
                                             System.out.println("You are not the owner of this listing");
                                             break;
                                         }
-                                        // check if teh listing is there in the calender for lid
-                                        // if yes then dont update
-                                        // if no then update
                                         ArrayList<Calender> calender = CalenderDao.readCalenderForLid(lid);
                                         for (Calender c : calender) {
                                             if (c.getLid() == lid) {
-                                                // present date is present_date, teh start date is start adn end date is
-                                                // end in teh calendar
-                                                // if the present date is between start and end date then dont update
-                                                // give code
                                                 String start = c.getStart();
                                                 String end = c.getEnd();
                                                 String[] start_date = start.split("-");
                                                 String[] end_date = end.split("-");
                                                 String present_date = present_day;
                                                 String[] presentdsd = present_date.split("-");
-                                                // Get the current date
                                                 LocalDate presentDate = LocalDate.now();
 
-                                                // Parse the start and end dates from strings to LocalDate objects
                                                 LocalDate startDate = LocalDate.parse(start);
                                                 LocalDate endDate = LocalDate.parse(end);
 
-                                                // Check if the present day is between the start and end dates
                                                 boolean isBetween = presentDate.isAfter(startDate)
                                                         && presentDate.isBefore(endDate);
 
-                                                // Print "yes" if present day is between start and end, otherwise print
-                                                // "no"
                                                 if (isBetween) {
                                                     System.out.println("You cannot update the listing as it is booked");
                                                 } else {
@@ -974,11 +1290,15 @@ public class App {
                                             break;
                                         }
                                         System.out.println("You can book the listing as it's not yet booked");
-                                        System.out.println("Please enter your credit card information");
+                                        System.out
+                                                .println("Please enter how would you like to pay? [VISA/Mastercard]");
                                         String ccInfo = scanner.nextLine();
-                                        scanner.nextLine();
                                         String book_date = present_day;
                                         double cost = ListingDao.getPricing(lid);
+                                        System.out.println("How many guests are you booking for?");
+                                        int guests = scanner.nextInt();
+                                        scanner.nextLine();
+                                        cost = cost * guests;
                                         System.out.println("The cost of your booking is: " + cost);
                                         System.out.println(
                                                 "Please enter the cid of the listing you want to book");
@@ -1043,11 +1363,11 @@ public class App {
                                         System.out.println("Please enter the bid of the booking you want to cancel");
                                         int bid2 = scanner.nextInt();
                                         scanner.nextLine();
-                                        if (BookingDao.checkBooking(bid2, uid) == false) {
-                                            System.out.println(
-                                                    "You cannot cancel the booking as you did not make the booking");
-                                            break;
-                                        }
+                                        // if (BookingDao.checkBooking(bid2, uid) == false) {
+                                        // System.out.println(
+                                        // "You cannot cancel the booking as you did not make the booking");
+                                        // break;
+                                        // }
                                         // enter the cid of the booking
                                         System.out
                                                 .println("Please enter the cid of the booking you want to cancel");
